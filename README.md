@@ -48,7 +48,7 @@ detectors over 90% of the time; raise burstiness alone and that falls to around
 So `--check` reports two numbers, and the second matters more. `stdev_words` is
 the spread, which one long outlier can inflate. `band_share` is the fraction of
 sentences sitting within 25% of the mean, which is the packed middle the
-research actually describes. A text has to fail both before this tool calls it
+research describes. A text has to fail both before this tool calls it
 metronomic, so a deliberately terse passage does not get flagged for being
 short.
 
