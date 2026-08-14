@@ -400,21 +400,44 @@ def rhythm(sents, profile=None):
 # weeks later whether it still holds. Data with no explanation is
 # unauditable; an explanation with no data change never fires.
 
-PROFILE_PATH = "profile/voice.json"
 FLAT_FOR_YOU = 0.6      # a draft under 60% of your usual spread reads flat FOR YOU
 KEEP_MIN_HITS = 2       # a word is yours only if it recurs
 KEEP_MIN_RATE = 1000    # ...at least once per this many words
 
 
-def load_profile(path=PROFILE_PATH):
+def profile_path():
+    """Where the profile lives, in the order a person would expect.
+
+    A writing voice belongs to a person, not to whatever directory they
+    happened to run the command from. An earlier version defaulted to
+    ./profile/voice.json, which wrote a personal profile into whichever
+    project was open and then failed to find it from anywhere else.
+
+      NOMISREAD_PROFILE   an explicit path wins
+      ./profile/voice.json  a repository with a house voice, checked in
+      ~/.no-misread/voice.json  otherwise: yours, across every project
+    """
+    env = os.environ.get("NOMISREAD_PROFILE")
+    if env:
+        return env
+    local = os.path.join("profile", "voice.json")
+    if os.path.exists(local):
+        return local
+    return os.path.join(os.path.expanduser("~"), ".no-misread", "voice.json")
+
+
+PROFILE_PATH = profile_path()
+
+
+def load_profile(path=None):
     try:
-        with open(path, encoding="utf-8") as fh:
+        with open(path or profile_path(), encoding="utf-8") as fh:
             return json.load(fh)
     except (OSError, ValueError):
         return None
 
 
-def learn(paths, path=PROFILE_PATH):
+def learn(paths, path=None):
     """Measure samples the author wrote WITHOUT a model, and record what they do.
 
     Appends. An earlier observation is never silently dropped: when a fresh
@@ -452,6 +475,7 @@ def learn(paths, path=PROFILE_PATH):
     floor = max(KEEP_MIN_HITS, words // KEEP_MIN_RATE)
     keep = {w: n for w, n in hits.items() if n >= floor}
 
+    path = path or profile_path()
     prof = load_profile(path) or {"allow": [], "history": []}
     today = datetime.date.today().isoformat()
     known = {e["term"] for e in prof.get("allow", [])}
@@ -708,7 +732,7 @@ def main():
               f"(mean {r['mean_words']}, {r['shortest']} to {r['longest']})")
         allow = [e["term"] for e in prof.get("allow", [])]
         print(f"  words kept as yours: {', '.join(allow) if allow else 'none'}")
-        print(f"  written to {PROFILE_PATH}")
+        print(f"  written to {profile_path()}")
         print("Now record WHY in profile/learnings.md. A number with no reason "
               "cannot be argued with in six weeks.")
         return 0

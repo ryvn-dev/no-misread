@@ -89,7 +89,7 @@ The generic floor is a guess about writers in general, and you are not writers
 in general.
 
 ```bash
-python3 lint/nomisread.py --learn old-post.md notes.md email.md
+python3 "$SKILL/lint/nomisread.py" --learn old-post.md notes.md email.md
 ```
 
 Point it at prose **you wrote without a model**. It measures your real spread
@@ -115,6 +115,10 @@ preference you asserted once.
 It refuses to learn from model output, including its own. That loop drifts the
 profile toward the model's habits while claiming to describe you.
 
+The profile lands in `~/.no-misread/voice.json`, so it follows you between
+projects. A repository that wants a checked-in house voice puts one at
+`./profile/voice.json` and that wins. `$NOMISREAD_PROFILE` overrides both.
+
 ## Install
 
 ```bash
@@ -135,10 +139,15 @@ alone** - `lint/nomisread.py` is one file, standard library, no install.
 ## Use
 
 ```bash
-python3 lint/nomisread.py --strip draft.md > clean.md
-python3 lint/nomisread.py --check clean.md        # direction detected for you
-python3 lint/nomisread.py --self-test
+SKILL=~/.claude/skills/no-misread     # wherever you installed it
+
+python3 "$SKILL/lint/nomisread.py" --strip draft.md > clean.md
+python3 "$SKILL/lint/nomisread.py" --check clean.md   # direction detected for you
+python3 "$SKILL/lint/nomisread.py" --self-test
 ```
+
+A bare `python3 lint/nomisread.py` only works from inside a clone. Installed as
+a skill, build the path from where you installed it.
 
 Or ask: *"make this sound human"*, *"rewrite this prompt so the model can't
 misread it"*, *"strip the watermark"*.

@@ -48,6 +48,21 @@ Mixed documents exist: a README with a long install procedure is one text
 coming back that contains a passage going out. Grade the passage separately
 rather than forcing the whole file into one mode.
 
+## Finding the linter
+
+The linter sits next to this file, and the user runs commands from their own
+project, not from here. Build the path from **this skill's own directory**,
+which is where you loaded `SKILL.md` from. Below, `$SKILL` stands for that
+directory, commonly `~/.claude/skills/no-misread`.
+
+```bash
+SKILL=~/.claude/skills/no-misread     # wherever this SKILL.md lives
+python3 "$SKILL/lint/nomisread.py" --check draft.md
+```
+
+A bare `python3 lint/nomisread.py` resolves against the user's project and
+fails. Check that the file exists before you promise a measured answer.
+
 ## The loop
 
 Check twice. The first check tells you what to fix. The second one decides
@@ -55,14 +70,14 @@ whether to ship, and it is the one people skip.
 
 ```bash
 # 1. diagnose the text you were given
-python3 lint/nomisread.py --strip draft.md > work.md
-python3 lint/nomisread.py --check work.md
+python3 "$SKILL/lint/nomisread.py" --strip draft.md > work.md
+python3 "$SKILL/lint/nomisread.py" --check work.md
 
 # 2. rewrite work.md yourself, applying the rules below
 
 # 3. gate the text you are about to hand over
-python3 lint/nomisread.py --strip work.md > final.md
-python3 lint/nomisread.py --check final.md      # exit 0 or go back to step 2
+python3 "$SKILL/lint/nomisread.py" --strip work.md > final.md
+python3 "$SKILL/lint/nomisread.py" --check final.md   # exit 0 or go to step 2
 ```
 
 **Why the second pass is not optional.** Your rewrite is model output. It can
@@ -84,18 +99,23 @@ mistakes an unchecked read for a measured one.
 
 ## If a profile exists, it wins
 
-`profile/voice.json` holds measurements of how this author writes. When it is
-present, `--check` compares the draft against that author rather than against a
-generic threshold, and stops flagging words the author demonstrably uses.
+A profile holds measurements of how this author writes. When one exists,
+`--check` compares the draft against that author rather than against a generic
+threshold, and stops flagging words the author demonstrably uses. Every report
+says which happened, under `profile`.
 
-Read `profile/learnings.md` before overriding anything the profile says. It
-carries the reasons.
+It resolves in this order, and a voice belongs to a person rather than to a
+directory:
+
+1. `$NOMISREAD_PROFILE`, when set
+2. `./profile/voice.json`, for a repository with a checked-in house voice
+3. `~/.no-misread/voice.json`, the default, which follows the user everywhere
 
 A user asks you to learn their voice. Or they name a flagged word as one of
 their own. Run the calibration on writing they produced **without a model**:
 
 ```bash
-python3 lint/nomisread.py --learn <their own files>
+python3 "$SKILL/lint/nomisread.py" --learn <their own files>
 ```
 
 Then write the reason into `profile/learnings.md`, dated. Never calibrate on
