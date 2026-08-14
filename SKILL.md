@@ -46,6 +46,26 @@ cannot see, which is most of what matters.
 Without the linter, apply the rules by hand and say that you did, so nobody
 mistakes an unchecked read for a measured one.
 
+## If a profile exists, it wins
+
+`profile/voice.json` holds measurements of how this author writes. When it is
+present, `--check` compares the draft against that author rather than against a
+generic threshold, and stops flagging words the author demonstrably uses.
+
+Read `profile/learnings.md` before overriding anything the profile says. It
+carries the reasons.
+
+When the user asks you to learn their voice, or says a flagged word is one they
+use, run the calibration on writing they produced **without a model**:
+
+```bash
+python3 lint/soundhuman.py --learn <their own files>
+```
+
+Then write the reason into `profile/learnings.md`, dated. Never calibrate on
+text a model wrote, including text you rewrote a moment ago. That loop teaches
+the profile the model's habits while it claims to describe a person.
+
 ## The rules
 
 **1. Strip the marks first.** Zero-width spaces, word joiners, byte-order

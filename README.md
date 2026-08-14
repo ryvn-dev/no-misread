@@ -67,6 +67,42 @@ types these at speed.
 **Sentences.** Run-up phrases, reveal-by-negation, abstractions performing human
 verbs, vague declaratives, closing rituals, worn vocabulary, and rhythm.
 
+## It calibrates to you
+
+The generic rule flags a draft whose sentence spread falls under 5. That number
+is a guess about writers in general, and you are not writers in general.
+
+```bash
+python3 lint/soundhuman.py --learn old-post.md notes.md email.md
+```
+
+Point it at prose **you wrote without a model**. It measures your actual spread
+and records which of the worn words you use, then checks every later draft
+against you instead of against the default.
+
+```console
+$ python3 lint/soundhuman.py --check draft.md      # before calibrating
+  "profile": "none (generic thresholds)",
+  "tells": {"worn_word": 3}
+
+$ python3 lint/soundhuman.py --learn my-essays/*.md
+  your spread: stdev 9.9 words (mean 12.4, 3 to 38)
+  words kept as yours: leverage
+
+$ python3 lint/soundhuman.py --check draft.md      # after
+  "profile": "applied",
+  "tells": {},
+  "yours_not_flagged": ["leverage"]
+```
+
+The worn-word list was never a list of words that are wrong. If you say
+`leverage` six times across four thousand words of your own writing, it is your
+word. Evidence is frequency in prose you wrote, so the list cannot grow from a
+preference you asserted once.
+
+It refuses to learn from model output, including its own. That loop would drift
+the profile toward the model's habits while claiming to describe you.
+
 ## Install
 
 **Claude Code skill**

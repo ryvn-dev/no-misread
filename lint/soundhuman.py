@@ -26,7 +26,9 @@ Usage:
 Exit codes for --check: 0 clean, 1 tells found.
 """
 
+import datetime
 import json
+import os
 import re
 import statistics
 import sys
@@ -273,7 +275,7 @@ STDEV_FLOOR = 5.0
 BAND_CEILING = 0.70
 
 
-def rhythm(sents):
+def rhythm(sents, profile=None):
     lengths = [len(s.split()) for s in sents]
     if len(lengths) < 5:
         return {"sentences": len(lengths), "measurable": False}
@@ -282,7 +284,7 @@ def rhythm(sents):
     lo, hi = mean * (1 - BAND), mean * (1 + BAND)
     inside = sum(1 for n in lengths if lo <= n <= hi)
     share = inside / len(lengths)
-    return {
+    out = {
         "sentences": len(lengths),
         "measurable": True,
         "mean_words": round(mean, 1),
@@ -292,12 +294,114 @@ def rhythm(sents):
         "longest": max(lengths),
         "reads_metronomic": sd < STDEV_FLOOR and share > BAND_CEILING,
     }
+    # With a calibrated profile the comparison stops being against a constant
+    # and starts being against this author. Somebody whose own writing runs at
+    # a spread of 14 has a problem at 7 that the fixed floor never sees.
+    if profile:
+        base = profile.get("rhythm", {}).get("stdev_words")
+        if base:
+            out["your_usual_stdev"] = base
+            out["flat_for_you"] = sd < base * FLAT_FOR_YOU
+            if out["flat_for_you"]:
+                out["reads_metronomic"] = True
+    return out
 
 
-def check(raw):
+# ── The profile: what this author actually does ────────────────────────────
+# Every entry has to come from a measurement of writing the author produced
+# without a model. A guess in here is worse than no profile, because it gets
+# applied silently on every run afterwards.
+#
+# Two halves, and both are required. profile/voice.json is machine-readable
+# and read on every check, so the next run uses it without thinking.
+# profile/learnings.md is the human-readable why, so a person can judge six
+# weeks later whether it still holds. Data with no explanation is
+# unauditable; an explanation with no data change never fires.
+
+PROFILE_PATH = "profile/voice.json"
+FLAT_FOR_YOU = 0.6      # a draft under 60% of your usual spread reads flat FOR YOU
+KEEP_MIN_HITS = 2       # a word is yours only if it recurs
+KEEP_MIN_RATE = 1000    # ...at least once per this many words
+
+
+def load_profile(path=PROFILE_PATH):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return None
+
+
+def learn(paths, path=PROFILE_PATH):
+    """Measure samples the author wrote WITHOUT a model, and record what they do.
+
+    Appends. An earlier observation is never silently dropped: when a fresh
+    sample contradicts an old entry the newer one wins and the old reason
+    stays in the record with its date, so the change can be argued with.
+    """
+    texts, files = [], []
+    for p in paths:
+        try:
+            texts.append(open(p, encoding="utf-8").read())
+            files.append(p)
+        except OSError:
+            continue
+    if not texts:
+        raise SystemExit("no readable samples")
+
+    joined = "\n\n".join(strip_code(t) for t in texts)
+    words = len(joined.split())
+    sents = sentences(joined)
+    if len(sents) < 20:
+        raise SystemExit(
+            f"only {len(sents)} sentences across {len(files)} file(s). "
+            "Calibration needs more: aim for 2,000+ words of your own writing, "
+            "or the profile records noise and then applies it to everything.")
+
+    measured = rhythm(sents)
+
+    # Which "worn" words does this author genuinely use? Frequency in their
+    # own unassisted prose is the evidence. A finance writer who says
+    # leverage six times means it; the list was never about them.
+    hits = {}
+    for m in WORN_WORDS.finditer(joined):
+        w = m.group(0).lower()
+        hits[w] = hits.get(w, 0) + 1
+    floor = max(KEEP_MIN_HITS, words // KEEP_MIN_RATE)
+    keep = {w: n for w, n in hits.items() if n >= floor}
+
+    prof = load_profile(path) or {"allow": [], "history": []}
+    today = datetime.date.today().isoformat()
+    known = {e["term"] for e in prof.get("allow", [])}
+    for w, n in sorted(keep.items()):
+        if w not in known:
+            prof.setdefault("allow", []).append({
+                "term": w,
+                "why": f"appears {n} times in {words} words of your own writing",
+                "added": today,
+            })
+
+    prof["rhythm"] = {k: measured[k] for k in
+                      ("mean_words", "stdev_words", "band_share", "shortest", "longest")
+                      if k in measured}
+    prof["samples"] = {"files": len(files), "words": words, "sentences": len(sents)}
+    prof["calibrated"] = today
+    prof.setdefault("history", []).append({
+        "date": today, "files": len(files), "words": words,
+        "stdev_words": prof["rhythm"].get("stdev_words"),
+    })
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(prof, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+    return prof
+
+
+def check(raw, profile=None):
     body = strip_code(raw)
     sents = sentences(body)
     words = max(1, len(body.split()))
+    allowed = {e["term"].lower() for e in (profile or {}).get("allow", [])}
 
     marks = {}
     marks.update(find_chars(raw, INVISIBLE))
@@ -308,8 +412,14 @@ def check(raw):
         if n:
             typo[name] = n
 
+    # A word the author demonstrably uses in their own unassisted writing is
+    # their word, not a tell. The generic list was never about them.
+    worn = [m.group(0) for m in WORN_WORDS.finditer(body)]
+    kept = [w for w in worn if w.lower() in allowed]
+    worn = [w for w in worn if w.lower() not in allowed]
+
     counts = {
-        "worn_word": len(WORN_WORDS.findall(body)),
+        "worn_word": len(worn),
         "empty_adverb": len(EMPTY_ADVERB.findall(body)),
         "contrast_frame": len(CONTRAST_FRAME.findall(body)),
         "throat_clearing": len(THROAT_CLEARING.findall(body)),
@@ -324,11 +434,12 @@ def check(raw):
     }
     counts = {k: v for k, v in counts.items() if v}
 
-    r = rhythm(sents)
+    r = rhythm(sents, profile)
     total = sum(counts.values()) + sum(marks.values()) + sum(typo.values())
 
-    return {
+    out = {
         "words": words,
+        "profile": "applied" if profile else "none (generic thresholds)",
         "invisible_marks": marks,
         "machine_typography": typo,
         "tells": counts,
@@ -337,11 +448,17 @@ def check(raw):
         "tells_per_100w": round(100.0 * total / words, 2),
         "verdict": verdict(total, marks, r),
     }
+    if kept:
+        out["yours_not_flagged"] = sorted({w.lower() for w in kept})
+    return out
 
 
 def verdict(total, marks, r):
     if marks:
         return "carries invisible characters: run --strip first"
+    if r.get("flat_for_you"):
+        return (f"flatter than you usually write: spread {r['stdev_words']} "
+                f"against your {r['your_usual_stdev']}")
     if r.get("reads_metronomic"):
         return "sentence lengths sit too close together: vary them before anything else"
     if total == 0:
@@ -412,9 +529,22 @@ def self_test():
     assert c["tells_total"] == 0, c["tells"]
     assert not c["rhythm"]["reads_metronomic"], c["rhythm"]
 
+    # A profile has to change what the checker does, or it is a note nobody
+    # acts on. Same text, two answers.
+    prof = {"allow": [{"term": "leverage", "why": "test", "added": "2026-01-01"}],
+            "rhythm": {"stdev_words": 20.0}}
+    generic = check("We leverage the pipeline. We leverage the queue too.")
+    tuned = check("We leverage the pipeline. We leverage the queue too.", prof)
+    assert generic["tells"].get("worn_word") == 2, generic["tells"]
+    assert "worn_word" not in tuned["tells"], tuned["tells"]
+    assert tuned["yours_not_flagged"] == ["leverage"], tuned
+    flat = check(CLEAN, prof)
+    assert flat["rhythm"]["flat_for_you"], flat["rhythm"]
+
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")
     print("  clean:", c["tells_total"], "tells, rhythm stdev", c["rhythm"]["stdev_words"])
+    print("  profile: suppresses a word you own, and flags prose flat for you")
 
 
 def main():
@@ -426,6 +556,23 @@ def main():
         self_test()
         return 0
 
+    if "--learn" in args:
+        samples = [a for a in args[args.index("--learn") + 1:] if not a.startswith("-")]
+        if not samples:
+            raise SystemExit("usage: --learn <files you wrote without a model>")
+        prof = learn(samples)
+        r = prof["rhythm"]
+        print(f"calibrated from {prof['samples']['files']} file(s), "
+              f"{prof['samples']['words']} words")
+        print(f"  your spread: stdev {r['stdev_words']} words "
+              f"(mean {r['mean_words']}, {r['shortest']} to {r['longest']})")
+        allow = [e["term"] for e in prof.get("allow", [])]
+        print(f"  words kept as yours: {', '.join(allow) if allow else 'none'}")
+        print(f"  written to {PROFILE_PATH}")
+        print("Now record WHY in profile/learnings.md. A number with no reason "
+              "cannot be argued with in six weeks.")
+        return 0
+
     mode = "--strip" if "--strip" in args else "--check"
     src = args[-1]
     raw = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
@@ -434,7 +581,7 @@ def main():
         sys.stdout.write(strip(raw))
         return 0
 
-    report = check(raw)
+    report = check(raw, load_profile())
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 1 if report["tells_total"] else 0
 
