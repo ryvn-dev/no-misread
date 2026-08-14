@@ -3,7 +3,7 @@
 No word on this list is wrong. Every one of them is ordinary English, and most
 were doing useful work until generated text picked them up and used them at ten
 times the rate a person would, which is the only reason they now read as a
-signature rather than as vocabulary. Frequency put them on this list, not taste.
+signature rather than as vocabulary. Frequency alone put them on this list.
 
 Replacements are plainer, never fancier. When nothing fits, delete.
 

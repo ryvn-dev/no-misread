@@ -21,8 +21,9 @@ tells, because readers can hear them.
 
 **In prose** - sentence rhythm. The demo above shows why this one matters: that
 paragraph passes every word list in this category, and its sentence lengths are
-12, 14, 14, 13, 12. People write 4, then 31, then 9. Detection research calls
-the measurement burstiness; `--check` reports the spread (`stdev_words`) and
+12, 14, 14, 13, 12. People write 4, then 31, then 9. [Detection
+research](https://www.textsight.ai/blog/sentence-length-variance/) calls the
+measurement burstiness; `--check` reports the spread (`stdev_words`) and
 how packed the middle is (`band_share`), and flags the text only when both
 fail, so terse writing is safe.
 
@@ -101,7 +102,8 @@ leads with the caveat that the linter measures compliance with its own rules,
 not writing quality.
 
 You can game the rhythm check by planting a three-word sentence in every
-paragraph. Nothing stops that. The number is a symptom report, not a target.
+paragraph. Nothing stops that. The number reports a symptom, and chasing it
+as a target grows a different tic.
 
 A zero score means clean of what a regex can see. It is not proof a person
 wrote the text, and this tool does not try to defeat AI detectors. Where you
@@ -112,5 +114,6 @@ literal changes the string.
 
 ## License
 
-[MIT](LICENSE) © 2026 ryvn-dev. Fork it, sell it, keep the notice. If it
-caught something in your writing, star the repo so the next person finds it.
+[MIT](LICENSE) © 2026 ryvn-dev. Use it however you like and keep the copyright
+notice. If it caught something in your writing, star the repo so the next
+person finds it.

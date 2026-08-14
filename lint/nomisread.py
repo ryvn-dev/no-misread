@@ -470,9 +470,44 @@ EMOJI_MARKER = re.compile(
 
 # Three parallel items. One tricolon is rhetoric; a page of them is a machine.
 TRICOLON = re.compile(
-    r"\b(\w+),\s+(\w+),\s+and\s+(\w+)\b(?!\s*[,:])",
+    r"(?<!, )\b(\w+),\s+(\w+),\s+and\s+(\w+)\b(?!\s*[,:])",
     re.I,
 )
+
+# The and-less drumbeat that closes a short sentence: "Fork it, sell it, keep
+# the notice." Regex alone cannot tell it from a plain four-item list, an
+# appositive, or a number series, so candidates go through count_drumbeats,
+# which is the judgment in code form.
+DRUMBEAT = re.compile(
+    r"((?:\w+[ '-]){0,2}\w+), ((?:\w+[ '-]){0,2}\w+), ((?:\w+[ '-]){0,2}\w+)(?=[.!?])")
+
+
+def count_drumbeats(body):
+    n = 0
+    for m in DRUMBEAT.finditer(body):
+        before = body[max(0, m.start() - 12):m.start()]
+        if "," in before:
+            continue                       # tail of a longer list
+        items = [g for g in m.groups()]
+        if any(re.search(r"\d", g) for g in items):
+            continue                       # number series, "4, then 31, then 9"
+        firsts = [g.split()[0].lower() for g in items]
+        if len(set(firsts)) < 3:
+            continue                       # deliberate anaphora, "then X, then Y"
+        line_start = body.rfind("\n", 0, m.start()) + 1
+        if body[line_start:line_start + 2].strip().startswith("#"):
+            continue                       # headings name things, they do not chant
+        sent_start = max(body.rfind(ch, 0, m.start()) for ch in ".!?\n")
+        sentence = body[sent_start + 1:m.end()]
+        if len(sentence.split()) > 12:
+            continue                       # a long sentence listing three facts
+        n += 1
+    return n
+
+
+# The mirrored contrast, "a symptom report, not a target." In a spec the shape
+# is precision ("Hyphens, not dashes"), so it counts in prose only.
+MIRROR_CONTRAST = re.compile(r", not (?:a |an |the |your |its )?[\w' -]{2,28}[.!?]")
 
 BOLD_LEAD_BULLET = re.compile(r"^\s*[-*]\s+\*\*[^*]{2,40}\*\*\s*[:—-]", re.M)
 
@@ -780,6 +815,12 @@ def check(raw, profile=None, mode="auto"):
         counts["over_25_words"] = sum(1 for s in sents if len(s.split()) > LONG_SENTENCE)
     else:
         counts.update(narrative(body, sents))
+        drum = count_drumbeats(body)
+        if drum:
+            counts["tricolon"] = counts.get("tricolon", 0) + drum
+        mirror = len(MIRROR_CONTRAST.findall(body))
+        if mirror:
+            counts["contrast_frame"] = counts.get("contrast_frame", 0) + mirror
 
     phrases = model_phrases()
     if phrases:
