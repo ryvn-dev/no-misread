@@ -1,6 +1,6 @@
 ---
 name: no-misread
-description: Fix English in both directions between a person and a model. Going out, rewrite a prompt, instruction, tool description, or error message so a model cannot misparse it. Coming back, rewrite model output so a person can read it: no invisible watermark characters, no machine cadence, no AI tells. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark. Also: make this prompt unambiguous, rewrite so the model cannot misread this.
+description: "Fix English in both directions between a person and a model. Going out, rewrite a prompt, instruction, tool description, or error message so a model cannot misparse it. Coming back, rewrite model output so a person can read it, with no invisible watermark characters, no machine cadence, and no AI tells. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark, make this prompt unambiguous, rewrite so the model cannot misread this."
 version: 2.0.0
 license: MIT
 ---
