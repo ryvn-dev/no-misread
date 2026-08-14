@@ -2,7 +2,7 @@
 
 A linter and a Claude skill for both halves of working with a model: the prompt
 you send it, and the prose it sends back. Prompts get checked for ambiguity,
-because the model cannot ask what you meant. Output gets checked for machine
+because the model rarely asks what you meant: it guesses and runs. Output gets checked for machine
 tells, because readers can hear them.
 
 <img src="assets/demo.svg" alt="Terminal output: a paragraph with no banned words and no em dashes still fails, because every sentence lands within two words of the last" width="760">

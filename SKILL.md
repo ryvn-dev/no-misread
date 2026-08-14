@@ -1,6 +1,6 @@
 ---
 name: no-misread
-description: "Fix English in both directions between a person and a model. Going out, rewrite a prompt, instruction, tool description, or error message so a model cannot misparse it. Coming back, rewrite model output so a person can read it, with no invisible watermark characters, no machine cadence, and no AI tells. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark, make this prompt unambiguous, rewrite so the model cannot misread this."
+description: "Check and rewrite the text between a person and a model. For prompts, tool descriptions, and error messages, remove the ambiguity a model guesses through. For model output, remove invisible watermark characters, machine rhythm, and AI tells, in English and Chinese. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark, make this prompt unambiguous."
 version: 2.0.0
 license: MIT
 ---
@@ -24,8 +24,8 @@ going, and `--check` reads that and reports it:
 ```
 
 **Going out.** Prompts, instructions, tool and function descriptions, error
-messages, agent-to-agent text. Anything a model or a non-native reader parses
-with nobody to ask. Ambiguity is the enemy, so even, flat, literal sentences
+messages, agent-to-agent text. Text that gets parsed mid-run, where the reader
+guesses instead of asking. Ambiguity is the enemy, so even, flat, literal sentences
 are correct.
 
 **Coming back.** The answer, the draft, the README, the post going out under a
@@ -38,7 +38,7 @@ Most rules below hold in both. Exactly three flip:
 |---|---|---|
 | Sentence length | Even, under 25 words | Varied, or it reads generated |
 | Contractions | Avoid, a model misreads `won't` | Keep, people use them |
-| `may` `might` `could` | Avoid, the reader cannot ask which | Keep, confidence is content |
+| `may` `might` `could` | Avoid, the reader guesses which | Keep, confidence is content |
 
 This is not a compromise between two philosophies. One text has one job.
 

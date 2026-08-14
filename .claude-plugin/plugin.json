@@ -1,7 +1,7 @@
 {
   "name": "no-misread",
   "displayName": "No Misread",
-  "description": "Fix English in both directions between a person and a model. Going out, make a prompt or tool description impossible to misparse. Coming back, strip invisible watermark characters and the machine cadence that vocabulary fixes cannot reach.",
+  "description": "Linter and Claude skill for the text between you and a model. Checks prompts for the ambiguity a model will guess through, and model output for invisible watermark characters, machine rhythm, and AI tells. English and Chinese.",
   "version": "2.0.0",
   "author": {
     "name": "ryvn-dev"
