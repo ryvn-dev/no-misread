@@ -254,27 +254,43 @@ def find_chars(raw, table):
     return hits
 
 
-def rhythm(sents):
-    """The measurement no word list can make.
+# Detection research calls this burstiness. Measured heads-up, generated prose
+# packs most of its sentences into one narrow band while human prose spreads
+# from a few words to fifty and past it, with no centre. Two numbers describe
+# that, and the second one matters more:
+#
+#   stdev_words   the spread. One long outlier can carry it, so it is not
+#                 sufficient on its own.
+#   band_share    the share of sentences sitting within 25% of the mean. This
+#                 is the shape the research actually describes, and a single
+#                 outlier cannot hide a packed middle from it.
+#
+# A text is called metronomic when the spread is small AND the middle is
+# packed. Requiring both keeps a deliberately terse passage from being
+# reported as machine-written for the crime of being short.
+BAND = 0.25
+STDEV_FLOOR = 5.0
+BAND_CEILING = 0.70
 
-    Human sentence length swings: a three-word sentence lands next to a
-    twenty-six-word one. Generated prose settles into a band and stays there,
-    because each sentence is drawn toward the same likely length. The spread
-    is the signal, and it survives every vocabulary edit.
-    """
+
+def rhythm(sents):
     lengths = [len(s.split()) for s in sents]
-    if len(lengths) < 4:
+    if len(lengths) < 5:
         return {"sentences": len(lengths), "measurable": False}
     mean = statistics.mean(lengths)
     sd = statistics.pstdev(lengths)
+    lo, hi = mean * (1 - BAND), mean * (1 + BAND)
+    inside = sum(1 for n in lengths if lo <= n <= hi)
+    share = inside / len(lengths)
     return {
         "sentences": len(lengths),
         "measurable": True,
         "mean_words": round(mean, 1),
         "stdev_words": round(sd, 1),
+        "band_share": round(share, 2),
         "shortest": min(lengths),
         "longest": max(lengths),
-        "reads_metronomic": sd < 5.0,
+        "reads_metronomic": sd < STDEV_FLOOR and share > BAND_CEILING,
     }
 
 
@@ -394,7 +410,7 @@ def self_test():
     c = check(CLEAN)
     assert not c["invisible_marks"], c
     assert c["tells_total"] == 0, c["tells"]
-    assert c["rhythm"]["stdev_words"] >= 5.0, c["rhythm"]
+    assert not c["rhythm"]["reads_metronomic"], c["rhythm"]
 
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")

@@ -25,6 +25,7 @@ $ python3 lint/soundhuman.py --check draft.md
     "sentences": 5,
     "mean_words": 13,
     "stdev_words": 0.6,
+    "band_share": 1.0,
     "shortest": 12,
     "longest": 14,
     "reads_metronomic": true
@@ -36,9 +37,23 @@ Twelve, fourteen, fourteen, thirteen, twelve. Every sentence within two words
 of the last. People do not write like that. We write four words, then
 thirty-one, then nine, because a thought ends when it ends.
 
-Sentence-length spread survives every vocabulary edit, which is why swapping
-`leverage` for `use` never fixes a text. Nothing else in this category measures
-it.
+Detection research calls this burstiness, and measures it the same way: split
+the text into sentences, take the spread of their lengths. Published
+comparisons put roughly 85% of GPT-4o's sentences inside a 15-28 word band,
+against human writing that runs from four words to past fifty with no centre at
+all. Texts scoring low on both burstiness and perplexity get flagged by
+detectors over 90% of the time; raise burstiness alone and that falls to around
+40%.
+
+So `--check` reports two numbers, and the second matters more. `stdev_words` is
+the spread, which one long outlier can inflate. `band_share` is the fraction of
+sentences sitting within 25% of the mean, which is the packed middle the
+research actually describes. A text has to fail both before this tool calls it
+metronomic, so a deliberately terse passage does not get flagged for being
+short.
+
+None of that survives a vocabulary edit, which is why swapping `leverage` for
+`use` never fixes a text, and why nothing else in this category measures it.
 
 ## Three layers
 
@@ -55,6 +70,12 @@ verbs, vague declaratives, closing rituals, worn vocabulary, and rhythm.
 ## Install
 
 **Claude Code skill**
+
+```bash
+npx skills add ryvn-dev/sound-human --skill sound-human --agent claude-code
+```
+
+or clone it directly:
 
 ```bash
 git clone https://github.com/ryvn-dev/sound-human ~/.claude/skills/sound-human
@@ -106,6 +127,15 @@ MIT. Use it, fork it, sell what you build with it.
 If you ship this skill, or a derivative of it, keep the copyright notice and
 credit `ryvn-dev/sound-human`. That is the whole ask, and the licence requires
 it.
+
+**If it caught something in your writing, star the repo.** That is how the next
+person finds it.
+
+## Sources
+
+- [Sentence length variance as an AI signal](https://www.textsight.ai/blog/sentence-length-variance/)
+- [Perplexity and burstiness in detection](https://quillbot.com/blog/ai-writing-tools/burstiness-and-perplexity/)
+- [How detectors weigh the two metrics](https://www.tryleap.ai/learn/perplexity-vs-burstiness)
 
 ## Licence
 
