@@ -177,6 +177,34 @@ chose for its sound rather than its content. Two lands. One lands harder.
 "the upload failed" are different claims. Removing a hedge to tighten a sentence
 changes what the text asserts. Tighten around hedges, never through them.
 
+## Chinese text
+
+<!-- no-misread: off -->
+The linter switches rule sets on its own when the text is Chinese. When you
+rewrite Chinese, apply these in order:
+
+**1. Full-width punctuation, everywhere.** ，。：；？！（）「」 between Chinese
+characters. A half-width comma inside a Chinese sentence is the loudest tell in
+the language, because a person typing Chinese has 全形 under their fingers.
+Half-width stays correct inside code spans and pure-English fragments.
+
+**2. No ——.** Restructure with 逗號 or 句號.
+
+**3. Kill translation-shaped grammar.** 進行⋯的動作 → use the verb. 被⋯所 →
+active voice. 透過⋯來 → 用. 對⋯進行檢查 → 檢查. The shape is English wearing
+Chinese characters.
+
+**4. Replace the worn words.** 賦能、抓手、顆粒度、閉環、底層邏輯、方法論、
+值得注意的是、綜上所述、扮演重要角色. Say the plain thing they stand for.
+
+**5. Rhythm counts in characters.** Vary sentence length exactly as in English
+prose. The register stays natural spoken Taiwanese-style written Chinese: 「」
+for quotes, English technical terms left in English.
+
+The language-neutral English rules carry over unchanged. Name the actor.
+Name the specific thing. Stop at the end. Keep every hedge.
+<!-- no-misread: on -->
+
 ## Quick checks
 
 Before delivering prose, in this order:

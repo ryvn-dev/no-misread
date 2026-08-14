@@ -191,6 +191,71 @@ PASSIVE = re.compile(
     re.I,
 )
 
+# ── Narrative shape ────────────────────────────────────────────────────────
+# Word lists catch vocabulary. These catch the essay SKELETON a model falls
+# back on: paragraphs chained with transition adverbs, the balanced
+# both-sides frame, three sentences in a row marching behind the same
+# opening word, and paragraphs cut to equal lengths. Each is countable, so
+# each belongs to the linter rather than to taste.
+
+TRANSITION_OPENER = re.compile(
+    r"^(?:furthermore|moreover|additionally|in addition|what's more|"
+    r"beyond that|similarly|likewise|conversely|nevertheless|nonetheless|"
+    r"consequently|as a result|in essence|in short|first(?:ly)?,|"
+    r"second(?:ly)?,|third(?:ly)?,|finally,|lastly,)\b",
+    re.I,
+)
+
+BOTH_SIDES = re.compile(
+    r"on (?:the )?one hand\b.{10,400}?\bon the other(?: hand)?\b",
+    re.I | re.S,
+)
+
+
+def paragraphs(text):
+    body = re.sub(r"```.*?```", " ", text, flags=re.S)
+    body = re.sub(r"^#{1,6}\s+.*$", "", body, flags=re.M)
+    return [p.strip() for p in re.split(r"\n\s*\n", body) if len(p.split()) >= 8]
+
+
+def narrative(text, sents):
+    """Count the skeleton tells. Prose only: a procedure is supposed to march."""
+    paras = paragraphs(text)
+    counts = {}
+
+    openers = sum(1 for p in paras if TRANSITION_OPENER.match(p))
+    if openers >= 2:
+        counts["transition_opener_chain"] = openers
+
+    if BOTH_SIDES.search(text):
+        counts["both_sides_frame"] = len(BOTH_SIDES.findall(text))
+
+    # Three consecutive sentences behind the same first word. "The" and its
+    # kin open half of technical English, so they are exempt; the tell is
+    # "It provides... It ensures... It enables..."
+    run, prev, worst = 1, None, 1
+    for s in sents:
+        first = s.split()[0].lower().strip('"\'(')
+        if first == prev and first not in ("the", "a", "an"):
+            run += 1
+            worst = max(worst, run)
+        else:
+            run = 1
+        prev = first
+    if worst >= 3:
+        counts["same_opener_run"] = worst
+
+    # Paragraphs cut to the same number of sentences, four or more in a row.
+    # The sentence-level metronome, one storey up.
+    if len(paras) >= 4:
+        sizes = [len(sentences(p)) for p in paras]
+        sizes = [n for n in sizes if n >= 2]
+        if len(sizes) >= 4 and max(sizes) - min(sizes) <= 1:
+            counts["uniform_paragraphs"] = len(sizes)
+
+    return counts
+
+
 # ── Technical mode only ────────────────────────────────────────────────────
 # Text a machine or a non-native reader parses without anyone to ask has the
 # opposite problem to an essay. There, uniform sentences are correct: a reader
@@ -636,6 +701,30 @@ def learn(paths, path=None):
     return prof
 
 
+PATTERN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patterns")
+
+
+def model_phrases():
+    """Phrases mined from a specific model's own generations.
+
+    Ships empty until a corpus earns entries: tools/mine_patterns.py measures,
+    a person curates, and only phrases that recur across unrelated tasks get
+    a line. Nothing goes in this folder by feel.
+    """
+    out = []
+    try:
+        for f in sorted(os.listdir(PATTERN_DIR)):
+            if not f.endswith(".txt"):
+                continue
+            for line in open(os.path.join(PATTERN_DIR, f), encoding="utf-8"):
+                line = line.strip().lower()
+                if line and not line.startswith("#"):
+                    out.append(line)
+    except OSError:
+        pass
+    return out
+
+
 def check(raw, profile=None, mode="auto"):
     """mode = "auto" (read the text and decide), or force "prose" / "technical".
 
@@ -689,6 +778,15 @@ def check(raw, profile=None, mode="auto"):
         counts["contraction"] = len(CONTRACTION.findall(body))
         counts["vague_modal"] = len(VAGUE_MODAL.findall(body))
         counts["over_25_words"] = sum(1 for s in sents if len(s.split()) > LONG_SENTENCE)
+    else:
+        counts.update(narrative(body, sents))
+
+    phrases = model_phrases()
+    if phrases:
+        low = body.lower()
+        hits = sum(low.count(ph) for ph in phrases)
+        if hits:
+            counts["model_phrase"] = hits
 
     counts = {k: v for k, v in counts.items() if v}
 
@@ -865,6 +963,23 @@ def self_test():
     assert zd["問題"].get("AI 常用詞"), zd
     zc = check_zh(ZH_CLEAN)
     assert not zc["問題"], zc
+
+    skeleton = (
+        "The tool has a purpose. It reads the queue. It writes the log. "
+        "It sends the report.\n\n"
+        "Furthermore, the design has other merits that deserve a mention "
+        "here as well. On the one hand the queue is fast, while on the other "
+        "hand the log is durable and complete.\n\n"
+        "Moreover, the rollout went well according to the team that ran it. "
+        "Every region reported a clean upgrade within the first hour there.\n\n"
+        "Additionally, costs fell during the quarter after the change landed. "
+        "Nobody has asked for a rollback of the change since it shipped.")
+    sk = check(skeleton, None, "prose")["tells"]
+    assert sk.get("same_opener_run", 0) >= 3, sk
+    assert sk.get("transition_opener_chain", 0) >= 2, sk
+    assert sk.get("both_sides_frame"), sk
+    assert "same_opener_run" not in check(CLEAN, None, "prose")["tells"]
+    assert "transition_opener_chain" not in check(CLEAN, None, "prose")["tells"]
 
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")
