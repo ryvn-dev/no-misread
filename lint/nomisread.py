@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""sound-human: find and remove the marks that make English read as machine-written.
+"""no-misread: find and remove the marks that make English read as machine-written.
 
 Two jobs, two modes.
 
@@ -18,10 +18,10 @@ of the things this file knows about, not that a person wrote it. Read the
 prose yourself before you believe any number here.
 
 Usage:
-  python3 soundhuman.py --check  draft.md
-  python3 soundhuman.py --strip  draft.md > clean.md
-  cat draft.md | python3 soundhuman.py --check -
-  python3 soundhuman.py --self-test
+  python3 nomisread.py --check  draft.md
+  python3 nomisread.py --strip  draft.md > clean.md
+  cat draft.md | python3 nomisread.py --check -
+  python3 nomisread.py --self-test
 
 Exit codes for --check: 0 clean, 1 tells found.
 """
@@ -188,6 +188,23 @@ PASSIVE = re.compile(
     re.I,
 )
 
+# ── Technical mode only ────────────────────────────────────────────────────
+# Text a machine or a non-native reader parses without anyone to ask has the
+# opposite problem to an essay. There, uniform sentences are correct: a reader
+# scanning a procedure under pressure is helped by every line having the same
+# shape, and a stylistic flourish costs them time. The aerospace controlled
+# English standard bans contractions and vague modals for the same reason.
+#
+# So these two run in technical mode and nowhere else, and the rhythm rule
+# switches off there. This is not a compromise between the two goals. It is
+# the recognition that one text has one goal, and you know which.
+CONTRACTION = re.compile(
+    r"\b\w+(?:n't|'ll|'re|'ve|'d)\b|\b(?:it's|that's|there's|here's|let's|you're|we're|i'm)\b",
+    re.I,
+)
+VAGUE_MODAL = re.compile(r"\b(should|would|may|might|could)\b", re.I)
+LONG_SENTENCE = 25
+
 HEDGE_STACK = re.compile(
     r"\b(may|might|could|can)\s+(?:potentially|possibly|perhaps|sometimes|often|likely)\b"
     r"|\b(?:it is|it's)\s+(?:possible|likely)\s+that\s+\w+\s+(?:may|might|could)\b"
@@ -220,7 +237,7 @@ def strip_code(text):
 
       code           machine typography is correct inside it
       block quotes   someone else's words, which you did not write
-      off regions    `<!-- sound-human: off -->` ... `<!-- sound-human: on -->`,
+      off regions    `<!-- no-misread: off -->` ... `<!-- no-misread: on -->`,
                      for the passage where you quote a tell in order to name it
       links          a URL is not prose
 
@@ -229,7 +246,7 @@ def strip_code(text):
     it has ever seen, which is true only in the most literal sense.
     """
     text = re.sub(
-        r"<!--\s*sound-human:\s*off\s*-->.*?<!--\s*sound-human:\s*on\s*-->",
+        r"<!--\s*no-misread:\s*off\s*-->.*?<!--\s*no-misread:\s*on\s*-->",
         " ", text, flags=re.S | re.I)
     text = re.sub(r"```.*?```", " ", text, flags=re.S)
     text = re.sub(r"~~~.*?~~~", " ", text, flags=re.S)
@@ -397,7 +414,11 @@ def learn(paths, path=PROFILE_PATH):
     return prof
 
 
-def check(raw, profile=None):
+def check(raw, profile=None, mode="prose"):
+    """mode = "prose" (a person reads it) or "technical" (a machine parses it).
+
+    The two share most of their rules and disagree about exactly three.
+    """
     body = strip_code(raw)
     sents = sentences(body)
     words = max(1, len(body.split()))
@@ -432,13 +453,26 @@ def check(raw, profile=None):
         "emoji_marker": len(EMOJI_MARKER.findall(body)),
         "bold_lead_bullet": len(BOLD_LEAD_BULLET.findall(body)),
     }
+
+    if mode == "technical":
+        counts["contraction"] = len(CONTRACTION.findall(body))
+        counts["vague_modal"] = len(VAGUE_MODAL.findall(body))
+        counts["over_25_words"] = sum(1 for s in sents if len(s.split()) > LONG_SENTENCE)
+
     counts = {k: v for k, v in counts.items() if v}
 
-    r = rhythm(sents, profile)
+    # Uniform sentences are correct when a reader scans under pressure, so the
+    # rhythm rule is reported in technical mode and never enforced there.
+    r = rhythm(sents, profile if mode == "prose" else None)
+    if mode == "technical":
+        r["reads_metronomic"] = False
+        r["note"] = "even lengths are correct here: a scanning reader wants one shape"
+
     total = sum(counts.values()) + sum(marks.values()) + sum(typo.values())
 
     out = {
         "words": words,
+        "mode": mode,
         "profile": "applied" if profile else "none (generic thresholds)",
         "invisible_marks": marks,
         "machine_typography": typo,
@@ -541,6 +575,20 @@ def self_test():
     flat = check(CLEAN, prof)
     assert flat["rhythm"]["flat_for_you"], flat["rhythm"]
 
+    # The two modes disagree about exactly three things, and agree elsewhere.
+    tech_text = ("It's possible the upload could fail. You shouldn't retry it "
+                 "more than three times because the server may throttle you and "
+                 "then the whole batch has to start over from the first record.")
+    p_rep = check(tech_text, None, "prose")
+    t_rep = check(tech_text, None, "technical")
+    assert "contraction" not in p_rep["tells"], p_rep["tells"]
+    assert t_rep["tells"]["contraction"] >= 2, t_rep["tells"]
+    assert t_rep["tells"]["vague_modal"] >= 2, t_rep["tells"]
+    assert t_rep["tells"]["over_25_words"] >= 1, t_rep["tells"]
+    flatlines = "\n".join(["The parser reads a row and writes it to the queue."] * 6)
+    assert check(flatlines, None, "prose")["rhythm"]["reads_metronomic"]
+    assert not check(flatlines, None, "technical")["rhythm"]["reads_metronomic"]
+
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")
     print("  clean:", c["tells_total"], "tells, rhythm stdev", c["rhythm"]["stdev_words"])
@@ -573,15 +621,20 @@ def main():
               "cannot be argued with in six weeks.")
         return 0
 
-    mode = "--strip" if "--strip" in args else "--check"
+    action = "--strip" if "--strip" in args else "--check"
+    mode = "prose"
+    if "--type" in args:
+        mode = args[args.index("--type") + 1]
+        if mode not in ("prose", "technical"):
+            raise SystemExit("--type takes prose or technical")
     src = args[-1]
     raw = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
 
-    if mode == "--strip":
+    if action == "--strip":
         sys.stdout.write(strip(raw))
         return 0
 
-    report = check(raw, load_profile())
+    report = check(raw, load_profile(), mode)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 1 if report["tells_total"] else 0
 

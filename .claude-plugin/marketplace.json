@@ -1,35 +1,38 @@
 {
-  "name": "sound-human",
+  "name": "no-misread",
   "owner": {
     "name": "ryvn-dev",
     "url": "https://github.com/ryvn-dev"
   },
-  "description": "Make generated English read as though a person wrote it.",
+  "description": "Fix English in both directions between a person and a model. Going out, make a prompt or tool description impossible to misparse. Coming back, strip invisible watermark characters and the machine cadence that vocabulary fixes cannot reach.",
   "plugins": [
     {
-      "name": "sound-human",
+      "name": "no-misread",
       "source": "./",
-      "displayName": "Sound Human",
-      "description": "Rewrite generated English so it reads as though a person wrote it. Strips invisible watermark characters, removes AI tells, and measures the sentence-length variance that vocabulary fixes cannot reach.",
-      "version": "1.0.0",
+      "displayName": "No Misread",
+      "description": "Fix English in both directions between a person and a model. Going out, make a prompt or tool description impossible to misparse. Coming back, strip invisible watermark characters and the machine cadence that vocabulary fixes cannot reach.",
+      "version": "2.0.0",
       "author": {
         "name": "ryvn-dev"
       },
-      "homepage": "https://github.com/ryvn-dev/sound-human",
-      "repository": "https://github.com/ryvn-dev/sound-human",
+      "homepage": "https://github.com/ryvn-dev/no-misread",
+      "repository": "https://github.com/ryvn-dev/no-misread",
       "license": "MIT",
       "keywords": [
         "ai-slop",
         "humanize",
         "de-ai",
+        "prompt-engineering",
         "writing",
         "prose",
         "editing",
         "watermark",
         "zero-width",
         "linter",
-        "technical-writing"
+        "technical-writing",
+        "ste"
       ]
     }
-  ]
+  ],
+  "version": "2.0.0"
 }

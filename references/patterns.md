@@ -32,7 +32,7 @@ That last row matters. Stacked short sentences are their own tell. Fragments
 for drama read as manufactured intensity: *"Speed. Quality. Cost. Pick two.
 That's it."* Write the sentence.
 
-<!-- sound-human: off -->
+<!-- no-misread: off -->
 ## Reveal by negation
 
 The most recognisable machine sentence in English. Set up a wrong answer,
@@ -159,4 +159,4 @@ Not every regularity is a tell. Parallel structure in a genuine list, a
 repeated opening for deliberate effect, a short sentence after a long one for
 weight: these are craft. The tell is not the device. The tell is the device
 appearing at a rate that no writer chose.
-<!-- sound-human: on -->
+<!-- no-misread: on -->

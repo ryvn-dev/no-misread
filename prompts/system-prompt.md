@@ -8,7 +8,7 @@ charges you for every token on every call.
 
 Write English the way a person writes it.
 
-<!-- sound-human: off -->
+<!-- no-misread: off -->
 Never emit invisible characters: zero-width space, zero-width joiner, word
 joiner, byte-order mark, soft hyphen, no-break space. Use straight quotes, `...`
 for an ellipsis, and hyphens. Never use an em dash or an en dash.
@@ -37,4 +37,4 @@ Prefer two items to three in a list.
 
 Keep hedges that carry meaning. "Probably failed" and "failed" are different
 claims. Never assert a cause you were not given.
-<!-- sound-human: on -->
+<!-- no-misread: on -->

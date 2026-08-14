@@ -1,11 +1,11 @@
 ---
-name: Sound Human
+name: No Misread
 description: Write every response as though a person wrote it. No invisible characters, no machine typography, no reveal-by-negation, and sentence lengths that swing.
 ---
 
 Write as a person writes.
 
-<!-- sound-human: off -->
+<!-- no-misread: off -->
 **Characters.** Straight quotes. Three dots for an ellipsis. Hyphens, never em
 dashes or en dashes. Never emit a zero-width space, word joiner, byte-order
 mark, soft hyphen, or no-break space.
@@ -39,4 +39,4 @@ give.
 
 Specific beats impressive. If a sentence claims something matters without
 naming what, delete it or name it.
-<!-- sound-human: on -->
+<!-- no-misread: on -->

@@ -7,7 +7,7 @@ signature rather than as vocabulary. Frequency put them on this list, not taste.
 
 Replacements are plainer, never fancier. When nothing fits, delete.
 
-<!-- sound-human: off -->
+<!-- no-misread: off -->
 ## Characters no keyboard produces
 
 Check these first, because reading cannot find them.
@@ -141,4 +141,4 @@ Cut around a hedge. Never through it.
 What to cut is hedges stacked on hedges: *may potentially*, *might possibly*,
 *could perhaps sometimes*, *it is possible that this may*. One hedge states
 uncertainty. Three state nothing.
-<!-- sound-human: on -->
+<!-- no-misread: on -->

@@ -4,7 +4,7 @@ Everything in this folder describes one author. It starts empty, and the skill
 runs on generic thresholds until you calibrate.
 
 ```bash
-python3 lint/soundhuman.py --learn essay.md notes.md old-post.md
+python3 lint/nomisread.py --learn essay.md notes.md old-post.md
 ```
 
 Point it at writing **you produced without a model**. Old blog posts, long

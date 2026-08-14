@@ -3,7 +3,7 @@
 Every change below names the rule it applies. Where a rewrite would have cost
 meaning, the longer version stays and the note says why.
 
-<!-- sound-human: off -->
+<!-- no-misread: off -->
 ---
 
 ## 1. Run-up, worn words, tricolon
@@ -190,4 +190,4 @@ under pressure and a stylistic flourish costs them time.
 
 The rules describe prose written to be read. They are not a compliance gate to
 run over every string in a repository.
-<!-- sound-human: on -->
+<!-- no-misread: on -->
