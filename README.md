@@ -155,6 +155,21 @@ misread it"*, *"strip the watermark"*.
 `--check` exits 1 when it finds something, so it drops into CI as a gate. This
 repository runs it over its own prose on every push.
 
+## The obvious way to cheat, said out loud
+
+Make a number a gate and people write to the number. You can pass the rhythm
+check by dropping one three-word sentence into every paragraph. The spread goes
+up, `band_share` goes down, the verdict turns green, and the writing is worse
+than when you started.
+
+Nothing here can stop that, and a version of this README that did not admit it
+would be dishonest. The measurement describes a symptom of generated prose. It
+is not the definition of good writing, and treating it as a target rather than
+a signal turns it into a different kind of tic.
+
+The check exists so you notice that every sentence came out the same length.
+What you do about it is a writing decision, and it belongs to you.
+
 ## What it does not do
 
 It does not make weak writing true. A paragraph with nothing to say comes out
