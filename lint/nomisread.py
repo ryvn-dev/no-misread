@@ -359,6 +359,9 @@ def zh_strip(raw):
     body = re.sub(r"<[^>]+>", " ", body)
     body = re.sub(r"\[[^\]]*\]\([^)]*\)", " ", body)
     body = re.sub(r"^\s*>.*$", " ", body, flags=re.M)
+    # Ordered-list markers: "1." against a Chinese item is markdown, not a
+    # half-width period the author typed into prose.
+    body = re.sub(r"^\s*\d+[.)]\s+", "", body, flags=re.M)
     return body
 
 
