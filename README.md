@@ -1,5 +1,9 @@
 # no-misread
 
+<img src="assets/demo.svg" alt="Terminal output: a paragraph with no banned words and no em dashes still fails, because every sentence lands within two words of the last" width="760">
+
+[繁體中文](README.zh.md)
+
 Two people are talking through a keyhole, and neither can ask the other what
 they meant.
 

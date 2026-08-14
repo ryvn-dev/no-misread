@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 486" width="760" height="486" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+  <defs>
+    <clipPath id="r"><rect width="760" height="486" rx="10"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="760" height="486" fill="#12141a"/>
+    <rect width="760" height="34" fill="#1c1f27"/>
+    <circle cx="20" cy="17" r="5.5" fill="#ff5f57"/>
+    <circle cx="39" cy="17" r="5.5" fill="#febc2e"/>
+    <circle cx="58" cy="17" r="5.5" fill="#28c840"/>
+    <text x="380" y="21" fill="#6e7481" text-anchor="middle" font-size="11.5">no-misread</text>
+
+    <text x="22" y="62" fill="#8b93a1">
+      <tspan fill="#57b6f5">$</tspan> cat draft.md
+    </text>
+    <text x="22" y="86" fill="#c7ccd6">The parser reads each row and converts it into an internal record format.</text>
+    <text x="22" y="105" fill="#c7ccd6">Each record is validated against the schema before it moves down the line.</text>
+    <text x="22" y="124" fill="#c7ccd6">Invalid records are written to a separate file for later manual review.</text>
+    <text x="22" y="143" fill="#c7ccd6">The valid records continue to the writer, which batches them for upload.</text>
+    <text x="22" y="162" fill="#c7ccd6">The writer retries a failed batch three times before it gives up entirely.</text>
+
+    <text x="22" y="196" fill="#5b6270" font-size="12">no banned words. no em dashes. no "delve". every word list passes it.</text>
+
+    <text x="22" y="230" fill="#8b93a1">
+      <tspan fill="#57b6f5">$</tspan> python3 nomisread.py --check draft.md
+    </text>
+
+    <text x="22" y="256" fill="#8b93a1">"direction": <tspan fill="#c8a2f8">"coming back to a person"</tspan>,</text>
+    <text x="22" y="275" fill="#8b93a1">"tells": <tspan fill="#57d977">{}</tspan>,</text>
+    <text x="22" y="294" fill="#8b93a1">"rhythm": {</text>
+    <text x="46" y="313" fill="#8b93a1">"mean_words": <tspan fill="#e8c46a">13</tspan>,   "shortest": <tspan fill="#e8c46a">12</tspan>,   "longest": <tspan fill="#e8c46a">14</tspan>,</text>
+    <text x="46" y="332" fill="#8b93a1">"stdev_words": <tspan fill="#ff7b72" font-weight="bold">0.6</tspan>,   "band_share": <tspan fill="#ff7b72" font-weight="bold">1.0</tspan>,</text>
+    <text x="46" y="351" fill="#8b93a1">"reads_metronomic": <tspan fill="#ff7b72" font-weight="bold">true</tspan></text>
+    <text x="22" y="370" fill="#8b93a1">},</text>
+
+    <rect x="16" y="384" width="728" height="30" rx="5" fill="#2a1d1e"/>
+    <text x="22" y="404" fill="#ff9d95">"verdict": "sentence lengths sit too close together"</text>
+
+    <text x="22" y="440" fill="#5b6270" font-size="12">12, 14, 14, 13, 12. every sentence within two words of the last.</text>
+    <text x="22" y="460" fill="#5b6270" font-size="12">people write four words, then thirty-one, then nine. no word swap fixes this.</text>
+  </g>
+</svg>
