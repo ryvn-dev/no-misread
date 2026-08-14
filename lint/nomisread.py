@@ -205,6 +205,58 @@ CONTRACTION = re.compile(
 VAGUE_MODAL = re.compile(r"\b(should|would|may|might|could)\b", re.I)
 LONG_SENTENCE = 25
 
+# ── Which direction is this text going? ────────────────────────────────────
+# Nobody should have to pick a mode. A text already carries the evidence of
+# who reads it, so read that instead of asking.
+#
+# Going out means somebody executes it: a prompt, a tool description, a
+# procedure, an error message. Those are built from imperatives, and the
+# imperative is countable.
+#
+# Coming back means somebody reads it: an answer, a draft, a post. Those
+# carry narration, first person, and past tense.
+
+IMPERATIVE_OPENER = re.compile(
+    r"^\s*(?:\d+[.)]\s*|[-*]\s*)?(?:please\s+)?"
+    r"(do|don't|use|return|write|set|never|always|call|pass|check|run|add|"
+    r"remove|include|avoid|ensure|make|keep|apply|read|send|create|delete|"
+    r"start|stop|open|close|select|enter|click|install|configure|specify|"
+    r"provide|list|report|reply|answer|output|format|follow|treat|assume)\b",
+    re.I,
+)
+NARRATION = re.compile(r"\b(i|we|my|our|us)\b", re.I)
+TOOL_FRONTMATTER = re.compile(r"^---\s*\n(?:.*\n)*?\s*description\s*:", re.M)
+IMPERATIVE_SHARE = 0.25
+
+
+def detect_direction(raw, _unused=None):
+    """Return (mode, one-line reason). Countable evidence only.
+
+    Reads the whole text, not the graded subset. Skip regions and block
+    quotes control what gets *scored*; they say nothing about who the text
+    is for, and a document that hides its own examples would otherwise lose
+    the evidence of what it is.
+    """
+    if TOOL_FRONTMATTER.search(raw):
+        return "technical", "frontmatter with a description field: this is a spec someone loads"
+
+    visible = re.sub(r"```.*?```", " ", raw, flags=re.S)
+    visible = re.sub(r"`[^`\n]+`", " CODE ", visible)
+    visible = re.sub(r"^#{1,6}\s+.*$", "", visible, flags=re.M)
+    sents = sentences(visible)
+    if len(sents) < 3:
+        return "prose", "too little text to tell, defaulting to the reading direction"
+
+    imperative = sum(1 for s in sents if IMPERATIVE_OPENER.match(s))
+    share = imperative / len(sents)
+    first_person = len(NARRATION.findall(" ".join(sents)))
+
+    if share >= IMPERATIVE_SHARE and first_person <= len(sents) * 0.5:
+        return "technical", (f"{imperative} of {len(sents)} sentences open with an "
+                             "imperative: somebody executes this")
+    return "prose", (f"only {imperative} of {len(sents)} sentences give an order: "
+                     "somebody reads this")
+
 HEDGE_STACK = re.compile(
     r"\b(may|might|could|can)\s+(?:potentially|possibly|perhaps|sometimes|often|likely)\b"
     r"|\b(?:it is|it's)\s+(?:possible|likely)\s+that\s+\w+\s+(?:may|might|could)\b"
@@ -258,10 +310,23 @@ def strip_code(text):
 
 
 def sentences(text):
-    body = re.sub(r"^\s*(?:[-*+]|\d+[.)])\s+", "", text, flags=re.M)
-    body = re.sub(r"^#{1,6}\s+.*$", "", body, flags=re.M)
-    parts = re.split(r"(?<=[.!?])[\s\"')\]]+", body)
-    return [p.strip() for p in parts if len(p.strip().split()) >= 3]
+    """Split prose into sentences, and refuse to invent any.
+
+    Markdown tables and tight bullet lists have no sentence-ending punctuation
+    between rows, so a naive split glues a whole table into one 68-word
+    monster. That inflates the length check and wrecks the rhythm measurement,
+    which is the one number this tool exists to report. A table is not prose:
+    drop it. A list item is its own unit: break on the line, not the full stop.
+    """
+    body = re.sub(r"^\s*\|.*\|\s*$", "", text, flags=re.M)      # table rows
+    body = re.sub(r"^\s*[-:| ]{4,}\s*$", "", body, flags=re.M)  # table rules
+    body = re.sub(r"^#{1,6}\s+.*$", "", body, flags=re.M)       # headings
+    body = re.sub(r"^\s*(?:[-*+]|\d+[.)])\s+", "\n", body, flags=re.M)
+
+    parts = []
+    for line in re.split(r"\n\s*\n|\n(?=\s*(?:[-*+]|\d+[.)])\s)", body):
+        parts.extend(re.split(r"(?<=[.!?])[\s\"')\]]+", line))
+    return [" ".join(p.split()) for p in parts if len(p.split()) >= 3]
 
 
 def find_chars(raw, table):
@@ -414,15 +479,24 @@ def learn(paths, path=PROFILE_PATH):
     return prof
 
 
-def check(raw, profile=None, mode="prose"):
-    """mode = "prose" (a person reads it) or "technical" (a machine parses it).
+def check(raw, profile=None, mode="auto"):
+    """mode = "auto" (read the text and decide), or force "prose" / "technical".
 
-    The two share most of their rules and disagree about exactly three.
+    Auto is the interface. Nobody should have to classify their own text
+    before a tool will look at it, and the text already says which way it is
+    going.
     """
     body = strip_code(raw)
     sents = sentences(body)
     words = max(1, len(body.split()))
     allowed = {e["term"].lower() for e in (profile or {}).get("allow", [])}
+
+    if mode == "auto":
+        mode, why = detect_direction(raw)
+        chose = "detected"
+    else:
+        why = "you asked for it"
+        chose = "forced"
 
     marks = {}
     marks.update(find_chars(raw, INVISIBLE))
@@ -472,7 +546,9 @@ def check(raw, profile=None, mode="prose"):
 
     out = {
         "words": words,
-        "mode": mode,
+        "direction": ("going out to a machine" if mode == "technical"
+                      else "coming back to a person"),
+        "direction_why": f"{chose}: {why}",
         "profile": "applied" if profile else "none (generic thresholds)",
         "invisible_marks": marks,
         "machine_typography": typo,
@@ -589,6 +665,22 @@ def self_test():
     assert check(flatlines, None, "prose")["rhythm"]["reads_metronomic"]
     assert not check(flatlines, None, "technical")["rhythm"]["reads_metronomic"]
 
+    # Auto is the interface: the text says which way it is going.
+    orders = ("Return only the rewritten text. Do not add a preamble. "
+              "Use the shortest wording that keeps the meaning. "
+              "Never invent a fact the source did not state. "
+              "Check the output before you send it.")
+    story = ("We shipped the parser on Tuesday and it broke twice that week. "
+             "Ravi found the byte-order mark on Thursday afternoon. "
+             "I had spent two days looking at the wrong file. "
+             "Nobody has reported it since we added the test.")
+    assert check(orders)["direction"].startswith("going out"), check(orders)["direction_why"]
+    assert check(story)["direction"].startswith("coming back"), check(story)["direction_why"]
+    assert "detected" in check(orders)["direction_why"]
+    assert "forced" in check(orders, None, "prose")["direction_why"]
+    frontmatter = "---\nname: x\ndescription: does a thing\n---\n\nA short body here."
+    assert check(frontmatter)["direction"].startswith("going out")
+
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")
     print("  clean:", c["tells_total"], "tells, rhythm stdev", c["rhythm"]["stdev_words"])
@@ -622,11 +714,11 @@ def main():
         return 0
 
     action = "--strip" if "--strip" in args else "--check"
-    mode = "prose"
+    mode = "auto"
     if "--type" in args:
         mode = args[args.index("--type") + 1]
-        if mode not in ("prose", "technical"):
-            raise SystemExit("--type takes prose or technical")
+        if mode not in ("prose", "technical", "auto"):
+            raise SystemExit("--type takes auto, prose or technical")
     src = args[-1]
     raw = sys.stdin.read() if src == "-" else open(src, encoding="utf-8").read()
 

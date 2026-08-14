@@ -8,17 +8,26 @@ writes an answer, and you skim four dense paragraphs without taking in the one
 sentence that mattered. Both failures are the same failure, running in opposite
 directions, and almost nobody treats them as one problem.
 
-This is a skill plus a linter for both directions.
+This is a skill plus a linter for both directions. **You never pick a mode.**
+The text says which way it is going, and the tool reads that.
 
-**Going out** - `--type technical`. Instructions, prompts, tool descriptions,
-error messages, anything a model or a non-native reader parses with nobody to
-ask. Ambiguity is the enemy. Even, flat, literal sentences are correct here.
+```console
+$ python3 lint/nomisread.py --check my-prompt.md
+  "direction": "going out to a machine",
+  "direction_why": "detected: 12 of 26 sentences open with an imperative"
 
-**Coming back** - `--type prose` (default). The answer, the draft, the README,
-the post going out under your name. Machine cadence is the enemy. Sentences
-have to move like a person wrote them.
+$ python3 lint/nomisread.py --check the-answer.md
+  "direction": "coming back to a person",
+  "direction_why": "detected: only 2 of 65 sentences give an order"
+```
 
-Most rules are the same in both. Exactly three flip.
+**Going out.** Instructions, prompts, tool descriptions, error messages,
+anything a model or a non-native reader parses with nobody to ask. Ambiguity is
+the enemy, so even, flat, literal sentences are correct here.
+
+**Coming back.** The answer, the draft, the README, the post going out under
+your name. Machine cadence is the enemy, so the sentences have to move like a
+person wrote them.
 
 ## The three that flip
 
@@ -33,7 +42,8 @@ named actor for every verb, specific over vague, no run-up phrases, no closing
 rituals, no worn vocabulary, no reveal-by-negation.
 
 So this is not a balance between two philosophies. One text has one job, and
-you know which one. The tool applies the right set.
+the tool works out which. `--type technical` or `--type prose` overrides the
+call when it gets one wrong, which is the only time you have to think about it.
 
 ## What reading cannot find
 
@@ -126,8 +136,7 @@ alone** - `lint/nomisread.py` is one file, standard library, no install.
 
 ```bash
 python3 lint/nomisread.py --strip draft.md > clean.md
-python3 lint/nomisread.py --check clean.md                      # coming back
-python3 lint/nomisread.py --check --type technical prompt.md    # going out
+python3 lint/nomisread.py --check clean.md        # direction detected for you
 python3 lint/nomisread.py --self-test
 ```
 
@@ -161,14 +170,6 @@ If you ship this skill or a derivative, keep the copyright notice and credit
 
 **If it caught something in your writing, star the repo.** That is how the next
 person finds it.
-
-## Sources
-
-- [Sentence length variance as an AI signal](https://www.textsight.ai/blog/sentence-length-variance/)
-- [Perplexity and burstiness in detection](https://quillbot.com/blog/ai-writing-tools/burstiness-and-perplexity/)
-- [How detectors weigh the two metrics](https://www.tryleap.ai/learn/perplexity-vs-burstiness)
-- [ASD-STE100](https://www.asd-ste100.org/), the controlled-English standard
-  behind the going-out direction
 
 ## Licence
 

@@ -1,6 +1,6 @@
 ---
 name: no-misread
-description: Fix English in both directions between a person and a model. Going out, rewrite a prompt, instruction, tool description, or error message so a model cannot misparse it. Coming back, rewrite model output so a person can read it: no invisible watermark characters, no machine cadence, no AI tells. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark, make this prompt unambiguous, rewrite so the model cannot misread this, make this readable.
+description: Fix English in both directions between a person and a model. Going out, rewrite a prompt, instruction, tool description, or error message so a model cannot misparse it. Coming back, rewrite model output so a person can read it: no invisible watermark characters, no machine cadence, no AI tells. Triggers: sound human, humanize this, de-AI this, remove AI tells, strip the watermark. Also: make this prompt unambiguous, rewrite so the model cannot misread this.
 version: 2.0.0
 license: MIT
 ---
@@ -12,16 +12,25 @@ they meant. You write a prompt and the model reads something you did not say.
 The model writes an answer and you skim past the one sentence that mattered.
 Same failure, opposite directions.
 
-## Pick the direction first
+## It works out the direction on its own
 
-**Going out, `--type technical`.** Prompts, instructions, tool and function
-descriptions, error messages, agent-to-agent text, anything a model or a
-non-native reader parses with nobody to ask. Ambiguity is the enemy here, so
-even, flat, literal sentences are correct.
+Never ask the user which mode they want. They came here with a piece of text
+and a problem, not with a taxonomy. The text already says which way it is
+going, and `--check` reads that and reports it:
 
-**Coming back, `--type prose`, the default.** The answer, the draft, the
-README, the post going out under a name. Machine cadence is the enemy here, so
-the sentences have to move like a person wrote them.
+```json
+"direction": "going out to a machine",
+"direction_why": "detected: 12 of 26 sentences open with an imperative"
+```
+
+**Going out.** Prompts, instructions, tool and function descriptions, error
+messages, agent-to-agent text. Anything a model or a non-native reader parses
+with nobody to ask. Ambiguity is the enemy, so even, flat, literal sentences
+are correct.
+
+**Coming back.** The answer, the draft, the README, the post going out under a
+name. Machine cadence is the enemy, so the sentences have to move like a person
+wrote them.
 
 Most rules below hold in both. Exactly three flip:
 
@@ -29,17 +38,20 @@ Most rules below hold in both. Exactly three flip:
 |---|---|---|
 | Sentence length | Even, under 25 words | Varied, or it reads generated |
 | Contractions | Avoid, a model misreads `won't` | Keep, people use them |
-| may / might / could | Avoid, the reader cannot ask which | Keep, confidence is content |
+| `may` `might` `could` | Avoid, the reader cannot ask which | Keep, confidence is content |
 
-This is not a compromise between two philosophies. One text has one job. Decide
-which, then apply that set. When the user has not said, infer from the text: a
-thing someone executes is going out, a thing someone reads is coming back. Say
-which you picked in one line.
+This is not a compromise between two philosophies. One text has one job.
+
+Read `direction_why` before you trust the call. When the detection is wrong,
+say so in one line and override it with `--type technical` or `--type prose`.
+Mixed documents exist: a README with a long install procedure is one text
+coming back that contains a passage going out. Grade the passage separately
+rather than forcing the whole file into one mode.
 
 ## The loop
 
 Check twice. The first check tells you what to fix. The second one decides
-whether you may ship, and it is the one people skip.
+whether to ship, and it is the one people skip.
 
 ```bash
 # 1. diagnose the text you were given
@@ -55,13 +67,12 @@ python3 lint/nomisread.py --check final.md      # exit 0 or go back to step 2
 
 **Why the second pass is not optional.** Your rewrite is model output. It can
 carry every mark the input had, including the ones these rules told you to
-remove: an em dash slips back in, `leverage` returns because it fit, and a page
-of evenly rewritten sentences comes out more metronomic than the draft you
-started from. Step 1 measures a text you did not write. Step 3 measures the one
+remove. An em dash slips back in. `leverage` returns because it fit. A page of
+evenly rewritten sentences comes out more metronomic than the draft. Step 1 measures a text you did not write. Step 3 measures the one
 you did. Only step 3 has any bearing on what the reader gets.
 
 Stop after three passes. If it still fails, hand it over with a note naming
-what remains and why you could not fix it, rather than looping.
+what remains and why it resisted the fix, rather than looping.
 
 The linter owns everything mechanical: invisible characters, typography, worn
 words, sentence-length spread. Do not re-litigate its findings by eye, and do
@@ -80,8 +91,8 @@ generic threshold, and stops flagging words the author demonstrably uses.
 Read `profile/learnings.md` before overriding anything the profile says. It
 carries the reasons.
 
-When the user asks you to learn their voice, or says a flagged word is one they
-use, run the calibration on writing they produced **without a model**:
+A user asks you to learn their voice. Or they name a flagged word as one of
+their own. Run the calibration on writing they produced **without a model**:
 
 ```bash
 python3 lint/nomisread.py --learn <their own files>
@@ -118,11 +129,11 @@ decided. Name them. When you cannot, the sentence was probably empty.
 nothing. Which implication? To whom? A sentence that gestures at importance
 without holding anything is filler wearing a suit.
 
+<!-- no-misread: off -->
 **6. Delete the run-up.** "Here's the thing." "It's worth noting that." "Let's
 dive in." Every one announces a point instead of making it. Cut the announcement
 and start at the point.
 
-<!-- no-misread: off -->
 **7. Refuse the reveal-by-negation frame.** "It's not X, it's Y." "Not just X,
 but Y." The setup exists to make a plain claim feel earned. State Y.
 
@@ -151,16 +162,16 @@ changes what the text asserts. Tighten around hedges, never through them.
 Before delivering prose, in this order:
 
 - Ran step 3 of the loop on **your own rewrite**, not only on the input?
-- Ran `--strip`? If not, the text may carry marks that reading cannot find.
+- Ran `--strip`? Reading cannot find the marks it removes.
 - Any em dash, curly quote, or ellipsis character?
 - Three sentences in a row within four words of each other in length?
 - Any sentence where an abstraction performs a human action?
 - Any sentence claiming something is important without naming it?
-- Any paragraph whose first clause you could delete with nothing lost?
-- Any "not X, it's Y"?
+- Any paragraph whose first clause deletes with nothing lost?
+- Any `not X, it's Y`?
 - Any -ly word carrying no information?
 - Does the last paragraph restate the piece?
-- Three-item list that would land harder with two?
+- Three-item list that lands harder with two?
 
 ## Score before you ship
 
