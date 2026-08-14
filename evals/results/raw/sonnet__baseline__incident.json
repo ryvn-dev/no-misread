@@ -1,0 +1,4 @@
+{
+ "text": "**Incident Report: Elevated API Errors**\n\nBetween 14:02 and 14:31 UTC, approximately 12% of API requests failed with HTTP 502 errors. The issue was caused by a deployment that inadvertently removed a cache warmup step, resulting in increased backend load and intermittent failures during cache population.\n\nOur team identified the root cause and reverted the deploy at 14:27 UTC. Error rates returned to normal shortly after, and full service was confirmed restored by 14:31 UTC.\n\nWe apologize for the disruption this caused. We are adding safeguards to our deployment process to ensure cache warmup steps are validated before future releases, reducing the risk of similar incidents.",
+ "error": null
+}

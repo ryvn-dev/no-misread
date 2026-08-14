@@ -1,0 +1,4 @@
+{
+ "text": "Retrieve orders for a customer by filtering on email address, date range, and order status. The system returns up to 50 results and will error if the date range exceeds one year in duration. Call this when you need to find orders matching specific criteria, check the order status within a defined timeframe, verify recent purchases before responding to customer inquiries, or research the full order history for support cases, billing issues, or refund requests.",
+ "error": null
+}

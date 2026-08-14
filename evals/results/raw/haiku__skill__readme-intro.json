@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe moves your Postgres tables to S3 as Parquet files. You give it a database and bucket name. It figures out the schema, handles incremental updates, and compresses the output. Everything runs from the command line—a single binary, no infrastructure, no fees for hosted services.\n\nData teams use sqlpipe to sync their production databases with data warehouses without slowing down the source system. Export data for reporting without touching production. Build data pipelines with shell commands. Process millions of rows per sync. Retry syncs when the network hiccups. The schema stays consistent from run to run. sqlpipe handles the implementation details so you focus on what matters: extracting value from your data.",
+ "error": null
+}

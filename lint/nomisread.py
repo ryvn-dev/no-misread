@@ -91,7 +91,10 @@ WORN_WORDS = re.compile(
     r"nuanced|multifaceted|holistic|myriad|plethora|paramount|pivotal|"
     r"crucial|vital|robust|seamless|seamlessly|comprehensive|innovative|"
     r"cutting-edge|state-of-the-art|game-chang\w+|transformative|"
-    r"leverag\w+|utiliz\w+|harness\w*|unlock\w*|elevat\w+|empower\w*|"
+    r"leverag\w+|utiliz\w+|unlock\w*|elevat\w+|empower\w*|"
+    # "harness the power of" is the cliche. A test harness is a thing that
+    # exists, and flagging it would fire on half the docs in any repository.
+    r"(?<![\w ]the )(?<![\w ]a )(?<![\w ]this )(?<![\w ]test )harness(?=\s+(?:the|its|their|our)\b)|"
     r"foster\w*|underscor\w+|showcas\w+|navigat\w+|streamlin\w+|"
     r"facilitat\w+|optimiz\w+|bolster\w*|spearhead\w*|"
     r"boasts|nestled|bustling|vibrant|breathtaking|stunning|"
@@ -204,6 +207,136 @@ CONTRACTION = re.compile(
 )
 VAGUE_MODAL = re.compile(r"\b(should|would|may|might|could)\b", re.I)
 LONG_SENTENCE = 25
+
+# ── Chinese ────────────────────────────────────────────────────────────────
+# The same thesis, in a language where the tells are different. Chinese written
+# by a machine, or by someone thinking in English, gives itself away in
+# punctuation width long before it gives itself away in word choice. A person
+# typing Chinese has a full-width comma under their fingers; a machine
+# assembling a sentence in English and swapping the characters does not.
+
+CJK = r"一-鿿㐀-䶿"
+
+# Half-width punctuation sitting against a Chinese character. The single
+# loudest tell there is, and the one no reader has to think about.
+HALF_WIDTH = re.compile(rf"[{CJK}]\s*[,.;:!?]|[,.;:!?]\s*[{CJK}]")
+HALF_PAREN = re.compile(rf"[{CJK}]\s*[()]|[()]\s*[{CJK}]")
+# Space wedged between two Chinese characters. Nobody types that.
+CJK_SPACE = re.compile(rf"[{CJK}] +[{CJK}]")
+CJK_DASH = re.compile(r"——")
+
+# Translation-ese: English sentence shapes wearing Chinese characters.
+TRANSLATIONESE = re.compile(
+    r"進行[一-鿿]{1,4}的?(?:動作|工作|處理)"
+    r"|做出[一-鿿]{1,4}的?決定"
+    r"|被[一-鿿]{1,6}所"
+    r"|基於[一-鿿]{1,6}的考量"
+    r"|透過[一-鿿]{1,8}來"
+    r"|對[一-鿿]{1,6}進行"
+    r"|具有[一-鿿]{1,4}性"
+    r"|的話[,，]"
+)
+
+# Vocabulary that generated Chinese reaches for far past any human rate.
+ZH_WORN = re.compile(
+    r"賦能|抓手|顆粒度|閉環|對齊顆粒|生態位|方法論|底層邏輯|"
+    r"極大地|有效地|顯著地|全面提升|深度賦能|深耕|聚焦於|"
+    r"值得注意的是|需要指出的是|不難發現|由此可見|綜上所述|總而言之|"
+    r"在當今[一-鿿]{0,6}的時代|隨著[一-鿿]{2,8}的發展|"
+    r"扮演[一-鿿]{0,4}重要的?角色|起到了?[一-鿿]{0,4}作用"
+)
+
+# The rule-of-three list, which reads as chosen for its beat rather than its
+# content, exactly as it does in English.
+# Three parallel items reads as a beat the writer chose. Four is a list, and a
+# regex that matches the first three of a longer list is reporting a tic that
+# is not there, so every item has to end where the pattern says it ends.
+ZH_TRICOLON = re.compile(
+    rf"(?<![、，,{CJK}])[{CJK}]{{2,4}}、[{CJK}]{{2,4}}、[{CJK}]{{2,4}}(?![{CJK}、])")
+
+
+def is_chinese(text):
+    cjk = len(re.findall(rf"[{CJK}]", text))
+    return cjk >= 50 and cjk / max(1, len(text)) > 0.15
+
+
+def zh_sentences(text):
+    body = re.sub(
+        r"<!--\s*no-misread:\s*off\s*-->.*?<!--\s*no-misread:\s*on\s*-->",
+        " ", text, flags=re.S | re.I)
+    body = re.sub(r"```.*?```", " ", body, flags=re.S)
+    body = re.sub(r"`[^`\n]+`", " ", body)
+    body = re.sub(r"<[^>]+>", " ", body)
+    body = re.sub(r"^#{1,6}\s+.*$", "", body, flags=re.M)
+    body = re.sub(rf"^\s*\|.*\|\s*$", "", body, flags=re.M)
+    parts = re.split(r"[。！？!?\n]+", body)
+    # Chinese rhythm is counted in characters, because a "word" is not a unit
+    # the writer feels. The shape of the signal is the same as in English.
+    out = []
+    for p in parts:
+        n = len(re.findall(rf"[{CJK}]", p))
+        if n >= 4:
+            out.append(n)
+    return out
+
+
+def zh_strip(raw):
+    body = re.sub(
+        r"<!--\s*no-misread:\s*off\s*-->.*?<!--\s*no-misread:\s*on\s*-->",
+        " ", raw, flags=re.S | re.I)
+    body = re.sub(r"```.*?```", " ", body, flags=re.S)
+    # A bare space here would sit between two Chinese characters and read as a
+    # spacing error the author never made.
+    body = re.sub(r"`[^`\n]+`", "_CODE_", body)
+    body = re.sub(r"<[^>]+>", " ", body)
+    body = re.sub(r"\[[^\]]*\]\([^)]*\)", " ", body)
+    body = re.sub(r"^\s*>.*$", " ", body, flags=re.M)
+    return body
+
+
+def check_zh(raw):
+    """Report the Chinese tells. Same shape of answer as the English pass."""
+    body = zh_strip(raw)
+
+    counts = {
+        "半形標點": len(HALF_WIDTH.findall(body)),
+        "半形括號": len(HALF_PAREN.findall(body)),
+        "中文之間有空格": len(CJK_SPACE.findall(body)),
+        "破折號": len(CJK_DASH.findall(body)),
+        "譯文腔": len(TRANSLATIONESE.findall(body)),
+        "AI 常用詞": len(ZH_WORN.findall(body)),
+        "三連排比": len(ZH_TRICOLON.findall(body)),
+    }
+    counts = {k: v for k, v in counts.items() if v}
+
+    lens = zh_sentences(raw)
+    r = {"句數": len(lens)}
+    if len(lens) >= 5:
+        mean = statistics.mean(lens)
+        sd = statistics.pstdev(lens)
+        lo, hi = mean * (1 - BAND), mean * (1 + BAND)
+        share = sum(1 for n in lens if lo <= n <= hi) / len(lens)
+        r.update({"平均字數": round(mean, 1), "字數標準差": round(sd, 1),
+                  "集中率": round(share, 2), "最短": min(lens), "最長": max(lens),
+                  "節奏死板": sd < 8.0 and share > BAND_CEILING})
+
+    marks = {}
+    marks.update(find_chars(raw, INVISIBLE))
+    total = sum(counts.values()) + sum(marks.values())
+    if marks:
+        verdict = "有隱形字元,先跑 --strip"
+    elif counts.get("半形標點"):
+        verdict = "中文裡混了半形標點,這是最明顯的一個破綻"
+    elif r.get("節奏死板"):
+        verdict = "每句長度太接近,先改節奏"
+    elif total == 0:
+        verdict = "這支工具看得到的部分都乾淨"
+    else:
+        verdict = "讀起來像機器寫的"
+
+    return {"語言": "中文", "隱形字元": marks, "問題": counts,
+            "節奏": r, "問題總數": total, "結論": verdict}
+
 
 # ── Which direction is this text going? ────────────────────────────────────
 # Nobody should have to pick a mode. A text already carries the evidence of
@@ -640,6 +773,24 @@ CLEAN = (
 )
 
 
+ZH_DIRTY = (
+    "在當今快速變化的時代,我們需要透過系統性的方法來進行深度賦能。"
+    "這不只是一個工具,更是一種方法論——它能夠有效地提升團隊的協作顆粒度。"
+    "值得注意的是,底層邏輯的對齊會起到關鍵作用。"
+    "我們聚焦於效率、品質、成本這三個面向,並且全面提升整體產出。"
+    "綜上所述,這個方案具有極大的可行性。"
+)
+
+ZH_CLEAN = (
+    "我們星期二上線。它那週壞了兩次。\n"
+    "兩次都是因為檔案開頭多了一個看不見的字元，讀檔的程式把它當成欄位名稱的一部分，"
+    "所以每一次查詢都差了一個字，回傳的結果永遠是空的。\n"
+    "後來 Ravi 找到了。他在讀檔那邊加了四行，順手補了一個測試。\n"
+    "從那之後沒有人再回報過。\n"
+    "我到現在還是覺得那四行應該早一點寫。"
+)
+
+
 def self_test():
     d = check(DIRTY)
     assert d["invisible_marks"], d
@@ -705,6 +856,16 @@ def self_test():
     frontmatter = "---\nname: x\ndescription: does a thing\n---\n\nA short body here."
     assert check(frontmatter)["direction"].startswith("going out")
 
+    # Chinese: the loudest tell is punctuation width, not word choice. A
+    # person typing Chinese has a full-width comma under their fingers.
+    assert is_chinese(ZH_DIRTY), "language detection missed Chinese"
+    zd = check_zh(ZH_DIRTY)
+    assert zd["問題"].get("半形標點"), zd
+    assert zd["問題"].get("破折號"), zd
+    assert zd["問題"].get("AI 常用詞"), zd
+    zc = check_zh(ZH_CLEAN)
+    assert not zc["問題"], zc
+
     print("self-test OK")
     print("  dirty:", d["tells_total"], "tells,", d["tells_per_100w"], "per 100w")
     print("  clean:", c["tells_total"], "tells, rhythm stdev", c["rhythm"]["stdev_words"])
@@ -749,6 +910,17 @@ def main():
     if action == "--strip":
         sys.stdout.write(strip(raw))
         return 0
+
+    # Language is detected the same way direction is: read the text.
+    if "--lang" in args:
+        lang = args[args.index("--lang") + 1]
+    else:
+        lang = "zh" if is_chinese(raw) else "en"
+
+    if lang == "zh":
+        report = check_zh(raw)
+        print(json.dumps(report, indent=2, ensure_ascii=False))
+        return 1 if report["問題總數"] else 0
 
     report = check(raw, load_profile(), mode)
     print(json.dumps(report, indent=2, ensure_ascii=False))

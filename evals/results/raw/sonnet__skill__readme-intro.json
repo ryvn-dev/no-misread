@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe moves Postgres tables into S3 as Parquet, on a schedule or on demand. Point it at a connection string and a bucket, tell it which tables (or give it a query), and it handles the rest: batching, schema inference, retries when S3 throttles you.\n\nIt's a single binary with no runtime dependencies. Configuration lives in one YAML file, so a sync job is reviewable in a diff. Each run writes partitioned Parquet files keyed by table and timestamp, which plays well with Athena, Redshift Spectrum, and most lake tools out of the box.\n\nsqlpipe does one thing. It doesn't transform your data, and it doesn't orchestrate anything beyond the transfer itself. If you need a DAG, put sqlpipe behind one.",
+ "error": null
+}

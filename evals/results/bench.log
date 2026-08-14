@@ -1,0 +1,43 @@
+  haiku    readme-intro       baseline  tells=2   per100w=1.92   stdev=2.9
+  haiku    readme-intro       skill     tells=1   per100w=0.89   stdev=4.2
+  haiku    incident           baseline  tells=2   per100w=1.85   stdev=5.5
+  haiku    incident           skill     tells=0   per100w=0.0    stdev=4.2
+  haiku    release-notes      baseline  tells=1   per100w=1.2    stdev=4.6
+  haiku    release-notes      skill     tells=1   per100w=0.83   stdev=4.7
+  haiku    essay              baseline  tells=3   per100w=1.95   stdev=4.9
+  haiku    essay              skill     tells=1   per100w=0.63   stdev=4.5
+  haiku    tool-description   baseline  tells=1   per100w=1.28   stdev=-
+  haiku    tool-description   skill     tells=1   per100w=1.33   stdev=-
+  haiku    error-message      baseline  tells=2   per100w=2.99   stdev=3.8
+  haiku    error-message      skill     tells=2   per100w=5.13   stdev=-
+  sonnet   readme-intro       baseline  tells=2   per100w=1.37   stdev=7.8
+  sonnet   readme-intro       skill     tells=0   per100w=0.0    stdev=8.6
+  sonnet   incident           baseline  tells=3   per100w=2.86   stdev=7.1
+  sonnet   incident           skill     tells=0   per100w=0.0    stdev=7.1
+  sonnet   release-notes      baseline  tells=2   per100w=1.77   stdev=8.3
+  sonnet   release-notes      skill     tells=0   per100w=0.0    stdev=6.8
+  sonnet   essay              baseline  tells=5   per100w=3.4    stdev=7.3
+  sonnet   essay              skill     tells=0   per100w=0.0    stdev=9.6
+  sonnet   tool-description   baseline  tells=3   per100w=3.61   stdev=-
+  sonnet   tool-description   skill     tells=3   per100w=3.23   stdev=6.1
+  sonnet   error-message      baseline  tells=11  per100w=8.66   stdev=12.5
+  sonnet   error-message      skill     tells=2   per100w=4.08   stdev=-
+
+==============================================================================
+DETERMINISTIC PASS (no model judged anything)
+==============================================================================
+model     scenario           dir           base/100w  skill/100w   change
+haiku     readme-intro       coming back        1.92        0.89     -54%
+haiku     incident           coming back        1.85         0.0    -100%
+haiku     release-notes      coming back         1.2        0.83     -31%
+haiku     essay              coming back        1.95        0.63     -68%
+haiku     tool-description   going out          1.28        1.33      +4%
+haiku     error-message      going out          2.99        5.13     +72%
+sonnet    readme-intro       coming back        1.37         0.0    -100%
+sonnet    incident           coming back        2.86         0.0    -100%
+sonnet    release-notes      coming back        1.77         0.0    -100%
+sonnet    essay              coming back         3.4         0.0    -100%
+sonnet    tool-description   going out          3.61        3.23     -11%
+sonnet    error-message      going out          8.66        4.08     -53%
+
+  n=12 pairs   mean tells/100w 2.74 -> 1.34   (-50.9%)

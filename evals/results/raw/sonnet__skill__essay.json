@@ -1,0 +1,4 @@
+{
+ "text": "Small teams skip the coordination tax. Four engineers can agree on an approach over lunch; forty need a design doc, three reviewers, and a meeting to schedule the meeting. Every person added multiplies the communication paths between them, and each path is a place a decision can stall.\n\nOwnership stays clear, too. On a small team, one person knows why the caching layer works the way it does, and can change it without a sign-off chain. On a large team, that same change might cross three areas of ownership, and now it needs a Slack thread, a review from someone unfamiliar with the code, and a rollout plan.\n\nNone of this means small teams do more work. They do less negotiating about the work, and that difference compounds. A team of five shipping twice a week will outpace a team of fifty shipping once a month, even though the fifty could, on paper, write more code.",
+ "error": null
+}

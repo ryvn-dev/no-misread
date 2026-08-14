@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe v2.0 is out.\n\nThe biggest change is a breaking one: the `name` field on `/v2/users` is gone, replaced by `first_name` and `last_name`. Any client that reads `name` will fail on upgrade, so update your integration before you deploy this version. We split the field because too many downstream systems needed the two parts separately and were parsing `name` by hand to get them.\n\nTwo more changes round out the release. A `--incremental` flag now lets you sync only the rows that changed since the last run, instead of pulling the full table every time. And Parquet writes are 40% faster, from a rewrite of the encoding path that removed a redundant buffer copy.\n\nUpgrade notes and a migration script for the `name` split are in the docs.",
+ "error": null
+}

@@ -1,0 +1,4 @@
+{
+ "text": "v2.0 breaks old clients. The /v2/users endpoint splits `name` into `first_name` and `last_name`. Update any code sending or receiving user data.\n\nA new `--incremental` flag skips records unchanged since your last run. You process large datasets much faster when only new or modified rows need handling. Many users report runtime cut in half for incremental jobs, which matters most when syncing data frequently.\n\nParquet output is 40% faster. We optimized the column writer and how data flushes to disk. Jobs writing Parquet files now complete sooner. The improvement is most visible with large datasets where every millisecond adds up. Start with Parquet exports if your workloads write files larger than a few hundred MB, where the speed gains compound.",
+ "error": null
+}

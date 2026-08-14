@@ -1,0 +1,114 @@
+{
+ "pairs": [
+  {
+   "model": "haiku",
+   "scenario": "readme-intro",
+   "direction": "coming back",
+   "baseline_per100w": 1.92,
+   "skill_per100w": 0.89,
+   "baseline_stdev": 2.9,
+   "skill_stdev": 4.2
+  },
+  {
+   "model": "haiku",
+   "scenario": "incident",
+   "direction": "coming back",
+   "baseline_per100w": 1.85,
+   "skill_per100w": 0.0,
+   "baseline_stdev": 5.5,
+   "skill_stdev": 4.2
+  },
+  {
+   "model": "haiku",
+   "scenario": "release-notes",
+   "direction": "coming back",
+   "baseline_per100w": 1.2,
+   "skill_per100w": 0.83,
+   "baseline_stdev": 4.6,
+   "skill_stdev": 4.7
+  },
+  {
+   "model": "haiku",
+   "scenario": "essay",
+   "direction": "coming back",
+   "baseline_per100w": 1.95,
+   "skill_per100w": 0.63,
+   "baseline_stdev": 4.9,
+   "skill_stdev": 4.5
+  },
+  {
+   "model": "haiku",
+   "scenario": "tool-description",
+   "direction": "going out",
+   "baseline_per100w": 1.28,
+   "skill_per100w": 1.33,
+   "baseline_stdev": null,
+   "skill_stdev": null
+  },
+  {
+   "model": "haiku",
+   "scenario": "error-message",
+   "direction": "going out",
+   "baseline_per100w": 2.99,
+   "skill_per100w": 5.13,
+   "baseline_stdev": 3.8,
+   "skill_stdev": null
+  },
+  {
+   "model": "sonnet",
+   "scenario": "readme-intro",
+   "direction": "coming back",
+   "baseline_per100w": 1.37,
+   "skill_per100w": 0.0,
+   "baseline_stdev": 7.8,
+   "skill_stdev": 8.6
+  },
+  {
+   "model": "sonnet",
+   "scenario": "incident",
+   "direction": "coming back",
+   "baseline_per100w": 2.86,
+   "skill_per100w": 0.0,
+   "baseline_stdev": 7.1,
+   "skill_stdev": 7.1
+  },
+  {
+   "model": "sonnet",
+   "scenario": "release-notes",
+   "direction": "coming back",
+   "baseline_per100w": 1.77,
+   "skill_per100w": 0.0,
+   "baseline_stdev": 8.3,
+   "skill_stdev": 6.8
+  },
+  {
+   "model": "sonnet",
+   "scenario": "essay",
+   "direction": "coming back",
+   "baseline_per100w": 3.4,
+   "skill_per100w": 0.0,
+   "baseline_stdev": 7.3,
+   "skill_stdev": 9.6
+  },
+  {
+   "model": "sonnet",
+   "scenario": "tool-description",
+   "direction": "going out",
+   "baseline_per100w": 3.61,
+   "skill_per100w": 3.23,
+   "baseline_stdev": null,
+   "skill_stdev": 6.1
+  },
+  {
+   "model": "sonnet",
+   "scenario": "error-message",
+   "direction": "going out",
+   "baseline_per100w": 8.66,
+   "skill_per100w": 4.08,
+   "baseline_stdev": 12.5,
+   "skill_stdev": null
+  }
+ ],
+ "judged": [],
+ "failures": []
+}

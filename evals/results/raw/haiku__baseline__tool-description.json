@@ -1,0 +1,4 @@
+{
+ "text": "Search and retrieve orders filtered by customer email address, date range, and order status. Returns up to 50 matching orders per request, sorted by date. Important: the date range parameter cannot exceed one year; any request exceeding this time limit will result in an error. Use this tool to look up all orders for a specific customer during a particular time period, check current order statuses, retrieve historical order data, or verify purchase information within the one-year constraint.",
+ "error": null
+}

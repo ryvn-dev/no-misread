@@ -1,0 +1,4 @@
+{
+ "text": "Between 14:02 and 14:31 UTC we experienced an API outage affecting service availability. Twelve percent of requests failed with HTTP 502 errors. The deploy released at 14:02 removed the cache warmup step, which initializes cached data needed at startup. Without this step, cached data was unavailable when requests arrived. Requests depending on this data failed immediately. We identified the issue and reverted the deploy at 14:27. Service was fully restored within two minutes. To prevent this happening again, we are implementing automated checks to flag removal of initialization code without explicit approval. All future changes will require staging verification.",
+ "error": null
+}

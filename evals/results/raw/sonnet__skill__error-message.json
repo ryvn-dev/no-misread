@@ -1,0 +1,4 @@
+{
+ "text": "I don't have sqlpipe's exact wording for that message memorized, and inventing one would mean handing you fabricated text labeled \"exact.\" That defeats the point.\n\nCheck the source where it wraps the AWS SDK's `PutObject` call, or trigger the failure once and paste the real output back to me.",
+ "error": null
+}

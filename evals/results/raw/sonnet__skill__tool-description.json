@@ -1,0 +1,4 @@
+{
+ "text": "Finds orders for a customer by email, date range, and status. Use it when a request needs order lookup or history rather than a single known order ID. Results are capped at 50, ordered by most recent; if the customer likely has more, say so and suggest narrowing the range. Reject or shrink any date range over one year before calling, since the tool errors on that. Email is required. Date range and status are optional filters. Don't call this to check whether one specific order exists if you already have its ID.",
+ "error": null
+}

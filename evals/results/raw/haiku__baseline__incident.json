@@ -1,0 +1,4 @@
+{
+ "text": "**Incident Report: API Service Degradation**\n\n**Timeline:** August 15, 2026, 14:02 – 14:31 UTC\n\nBetween 14:02 and 14:31 UTC, we experienced elevated error rates with approximately 12% of API requests failing with HTTP 502 Bad Gateway responses.\n\n**Root Cause:** A production deployment at 14:02 UTC inadvertently removed the cache warmup step from our deployment process. This caused backend services to operate without pre-populated cache, resulting in increased latency and request timeouts.\n\n**Resolution:** We identified the issue and successfully reverted the problematic deployment at 14:27 UTC. Services returned to normal operation immediately following the revert.\n\n**Next Steps:** We are reviewing our deployment procedures to prevent similar incidents in the future.",
+ "error": null
+}

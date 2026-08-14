@@ -1,0 +1,4 @@
+{
+ "text": "Searches orders using customer email, date range, and/or status filters. Returns up to 50 matching orders, ordered by relevance/recency. Requires the date range to span one year or less — call it with a narrower window (e.g., per-quarter) if you need to cover more history, and expect an error if the span exceeds 365 days. Use this to look up a specific customer's order history, check order status, or find orders within a time window; not for retrieving a single order by ID.",
+ "error": null
+}

@@ -1,0 +1,4 @@
+{
+ "text": "# sqlpipe v2.0\n\n**Breaking Changes**\nThe `/v2/users` endpoint's `name` field has been split into `first_name` and `last_name`. Update clients to use the new fields separately.\n\n**New Features**\n- Introduced `--incremental` flag for resumable data transfers, reducing redundant processing and improving reliability for large datasets.\n\n**Performance Improvements**\n- Parquet export performance improved by 40%, delivering significantly faster write speeds for columnar data operations.\n\n**Migration Guide**\nExisting API consumers must update request/response parsing to handle the restructured user name fields. See documentation for examples.",
+ "error": null
+}

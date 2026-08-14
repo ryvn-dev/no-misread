@@ -1,0 +1,4 @@
+{
+ "text": "API requests began failing at 14:02 UTC. A deploy shipped without the cache warmup step, and 502 errors hit 12% of requests over the next twenty-nine minutes. The on-call engineer traced the failures to that deploy and rolled it back at 14:27. Error rates dropped to normal within minutes as the cache refilled.\n\nWe're restoring the warmup step as a required pre-deploy check and adding an alert that pages on-call within two minutes of any 502 spike above 1%. Both changes are in review now.",
+ "error": null
+}

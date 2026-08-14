@@ -1,0 +1,4 @@
+{
+ "text": "I don't have that string — I can't find sqlpipe's source or logs from here, and I'm not going to invent a precise multi-line error message and present it as the tool's actual output. A fabricated \"exact\" quote is worse than no answer if you're going to match it against real logs, write a test fixture, or put it in docs.\n\nTwo honest options:\n\n1. **Point me at the source.** If you have the sqlpipe repo locally (or a URL), I can grep for the S3 upload error path and quote it verbatim.\n2. **I write an illustrative example**, clearly labeled as *not* a verified quote — something plausible in the style of an AWS SDK error wrapped by a CLI tool, e.g.:\n\n   ```\n   Error: failed to upload to S3\n   AccessDenied: Access Denied\n     status code: 403, request id: ..., host id: ...\n   ```\n\n   But that's a guess at formatting, not sqlpipe's actual text.\n\nWhich do you want?",
+ "error": null
+}

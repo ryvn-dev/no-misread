@@ -1,0 +1,4 @@
+{
+ "text": "**sqlpipe v2.0 Release Notes**\n\n**⚠️ Breaking Change:** The `name` field on `/v2/users` has been split into `first_name` and `last_name`. Clients reading `name` from this endpoint will need to update to the new fields before upgrading — this response shape changes with no compatibility shim.\n\n**New: `--incremental` flag.** Run pipelines that only process new or changed records since the last run, instead of full reloads — faster syncs and lower load on source systems.\n\n**Performance: Parquet writes are 40% faster.** Output-heavy pipelines writing to Parquet should see a meaningful drop in run time with no configuration changes required.\n\nWe recommend auditing any integration against `/v2/users` before upgrading, given the breaking field change above.",
+ "error": null
+}
