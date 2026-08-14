@@ -185,8 +185,11 @@ FALSE_AGENCY = re.compile(
     re.I,
 )
 
+# Both passive shapes. The get-passive ("prompts get checked") reads casual
+# and walked straight past the be-only version of this rule for a full day,
+# until a competitor skill running as a critic flagged it in our own README.
 PASSIVE = re.compile(
-    r"\b(is|are|was|were|be|been|being)\s+(\w+ed|made|done|given|taken|seen|"
+    r"\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(\w+ed|made|done|given|taken|seen|"
     r"known|held|built|written|shown|found|left|kept|sent|told)\b(?!\s+by\s+\w)",
     re.I,
 )
@@ -795,6 +798,10 @@ def check(raw, profile=None, mode="auto"):
     worn = [w for w in worn if w.lower() not in allowed]
 
     counts = {
+        # A semicolon splices two sentences that wanted to be two sentences.
+        # Generated prose leans on it; so does prose translated from an
+        # outline. Code spans are already stripped, so this counts prose only.
+        "semicolon": body.count(";"),
         "worn_word": len(worn),
         "empty_adverb": len(EMPTY_ADVERB.findall(body)),
         "contrast_frame": len(CONTRAST_FRAME.findall(body)),

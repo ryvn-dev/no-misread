@@ -1,9 +1,9 @@
 # no-misread
 
 A linter and a Claude skill for both halves of working with a model: the prompt
-you send it, and the prose it sends back. Prompts get checked for ambiguity,
-because the model rarely asks what you meant: it guesses and runs. Output gets checked for machine
-tells, because readers can hear them.
+you send it, and the prose it sends back. It checks prompts for ambiguity,
+because the model rarely asks what you meant: it guesses and runs. It checks
+output for machine tells, because readers can hear them.
 
 <img src="assets/demo.svg" alt="Terminal output: a paragraph with no banned words and no em dashes still fails, because every sentence lands within two words of the last" width="760">
 
@@ -23,7 +23,7 @@ tells, because readers can hear them.
 paragraph passes every word list in this category, and its sentence lengths are
 12, 14, 14, 13, 12. People write 4, then 31, then 9. [Detection
 research](https://www.textsight.ai/blog/sentence-length-variance/) calls the
-measurement burstiness; `--check` reports the spread (`stdev_words`) and
+measurement burstiness. `--check` reports the spread (`stdev_words`) and
 how packed the middle is (`band_share`), and flags the text only when both
 fail, so terse writing is safe.
 
@@ -31,7 +31,7 @@ fail, so terse writing is safe.
 `might` / `could` the reader cannot resolve, sentences over 25 words. Even,
 flat sentences are correct here, so the rhythm check turns off.
 
-You never pick a mode. The tool reads the text and reports which rules it
+You never pick a mode. The linter reads the text and reports which rules it
 applied and why:
 
 ```console
@@ -46,7 +46,7 @@ $ python3 lint/nomisread.py --check my-prompt.md
 inside Chinese text (the loudest tell there is), translation-shaped grammar,
 the worn words (「賦能」「顆粒度」「值得注意的是」), and rhythm counted in
 characters. The first draft of this project's own Chinese README scored 87
-problems; the current one scores 0.
+problems. The current one scores 0.
 
 ## Install
 
@@ -90,8 +90,8 @@ instead of a generic floor. Say `leverage` six times in four thousand words of
 your own writing and it stops getting flagged, with the evidence recorded.
 
 It refuses to learn from model output, including its own rewrites. The profile
-lives at `~/.no-misread/voice.json`; a checked-in `./profile/voice.json` wins
-for a team house style.
+lives at `~/.no-misread/voice.json`, and a checked-in `./profile/voice.json`
+wins for a team house style.
 
 ## Results and limits
 

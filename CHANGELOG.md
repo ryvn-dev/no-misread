@@ -22,8 +22,8 @@ did not say. One failure, two directions.
 
 **Calibration**
 - `--learn` measures writing the author produced without a model and records
-  their real sentence spread and the worn words they use. Later drafts get
-  compared against them rather than against a generic floor.
+  their real sentence spread and the worn words they use. Later checks compare
+  drafts against them rather than against a generic floor.
 - The profile resolves `$NOMISREAD_PROFILE`, then `./profile/voice.json` for a
   checked-in house voice, then `~/.no-misread/voice.json`.
 - It refuses to learn from model output, including its own.

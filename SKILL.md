@@ -24,7 +24,7 @@ going, and `--check` reads that and reports it:
 ```
 
 **Going out.** Prompts, instructions, tool and function descriptions, error
-messages, agent-to-agent text. Text that gets parsed mid-run, where the reader
+messages, agent-to-agent text. Text a machine parses mid-run, where the reader
 guesses instead of asking. Ambiguity is the enemy, so even, flat, literal sentences
 are correct.
 

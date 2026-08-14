@@ -9,8 +9,8 @@ python3 lint/nomisread.py --learn essay.md notes.md old-post.md
 
 Point it at writing **you produced without a model**. Old blog posts, long
 emails, commit messages, anything with your fingerprints on it. Aim for 2,000
-words or more. Below twenty sentences it refuses, because a profile built on
-noise then gets applied to everything you write afterwards.
+words or more. Below twenty sentences it refuses, because a noisy profile then
+shapes every later check of your writing.
 
 ## What it measures
 

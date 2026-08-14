@@ -35,7 +35,7 @@ table.** Zero violations on both instruments, essay stdev 3.1, one cell
 formally metronomic. The six-book human baseline in the arena runs stdev 12 to
 22. A counter built from word lists cannot see this, which is why both
 counters said perfect while the rhythm said machine. The STE style is correct
-for its own goal, which is text a machine parses; applied to an essay it
+for its own goal, which is text a machine parses. Applied to an essay it
 produces exactly the uniformity that detection research flags.
 
 **Our first technical result was a real loss, and the fix showed up in the numbers.** The
@@ -53,6 +53,6 @@ spread of 5.8 against their 4.3 and 3.5.
 One generation per cell, and it matters: our prose cells moved from 0.00 to
 1.57 on our own instrument between two runs whose prompt differed by one
 paragraph. Treat single-cell differences as noise and directional means as
-signal. Both instruments are word-and-pattern counters; neither measures
+signal. Both instruments are word-and-pattern counters, and neither measures
 whether the writing is good. The rhythm column is our own metric, stated as
 such. Raw generations sit in `raw/h2h__*` for reading.
