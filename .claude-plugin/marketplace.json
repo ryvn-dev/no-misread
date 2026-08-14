@@ -1,0 +1,35 @@
+{
+  "name": "sound-human",
+  "owner": {
+    "name": "ryvn-dev",
+    "url": "https://github.com/ryvn-dev"
+  },
+  "description": "Make generated English read as though a person wrote it.",
+  "plugins": [
+    {
+      "name": "sound-human",
+      "source": "./",
+      "displayName": "Sound Human",
+      "description": "Rewrite generated English so it reads as though a person wrote it. Strips invisible watermark characters, removes AI tells, and measures the sentence-length variance that vocabulary fixes cannot reach.",
+      "version": "1.0.0",
+      "author": {
+        "name": "ryvn-dev"
+      },
+      "homepage": "https://github.com/ryvn-dev/sound-human",
+      "repository": "https://github.com/ryvn-dev/sound-human",
+      "license": "MIT",
+      "keywords": [
+        "ai-slop",
+        "humanize",
+        "de-ai",
+        "writing",
+        "prose",
+        "editing",
+        "watermark",
+        "zero-width",
+        "linter",
+        "technical-writing"
+      ]
+    }
+  ]
+}
