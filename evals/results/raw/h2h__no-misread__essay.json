@@ -1,0 +1,4 @@
+{
+ "text": "Small teams skip the meetings that large teams need just to stay aligned. A five-person team can decide something over lunch. A fifty-person team needs a doc, a review cycle, and three follow-up threads before anyone agrees on the same fact.\n\nOwnership stays visible at small scale. Everyone can see who is blocked and why, so nobody waits three days for an answer that was one Slack message away.\n\nLarge teams build coordination costs that grow faster than the work itself. Every added person multiplies the paths a decision has to travel before it becomes an action. Small teams keep that path short.\n\nFewer people also means fewer opinions to reconcile before code ships. A small team argues once and moves. A large team argues, defers to a committee, and argues again next sprint.\n\nSpeed, in the end, is a function of how many people have to agree before something happens.",
+ "error": null
+}

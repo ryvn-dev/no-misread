@@ -1,0 +1,4 @@
+{
+ "text": "Searches orders by customer email, date range, and status. Returns up to 50 matches, most recent first. Call it when a request references a specific customer's order history, needs status filtering (pending, shipped, refunded, etc.), or asks what someone ordered in a given window. Date ranges longer than one year raise an error — split them into sub-year chunks first. Not for looking up a single order by ID.",
+ "error": null
+}

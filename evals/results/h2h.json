@@ -1,0 +1,307 @@
+{
+ "cells": {
+  "baseline::readme-intro": {
+   "kind": "prose",
+   "ours": 1.37,
+   "theirs": 4.11,
+   "stdev": 7.8,
+   "metro": false
+  },
+  "baseline::incident": {
+   "kind": "prose",
+   "ours": 2.86,
+   "theirs": 3.81,
+   "stdev": 7.1,
+   "metro": false
+  },
+  "baseline::release-notes": {
+   "kind": "prose",
+   "ours": 1.77,
+   "theirs": 2.65,
+   "stdev": 8.3,
+   "metro": false
+  },
+  "baseline::essay": {
+   "kind": "prose",
+   "ours": 3.4,
+   "theirs": 2.04,
+   "stdev": 7.3,
+   "metro": false
+  },
+  "baseline::tool-description": {
+   "kind": "technical",
+   "ours": 3.61,
+   "theirs": 6.02,
+   "stdev": null,
+   "metro": false
+  },
+  "baseline::error-message": {
+   "kind": "technical",
+   "ours": 8.66,
+   "theirs": 5.84,
+   "stdev": 12.5,
+   "metro": false
+  },
+  "no-misread::readme-intro": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 1.71,
+   "stdev": 8.8,
+   "metro": false
+  },
+  "no-misread::incident": {
+   "kind": "prose",
+   "ours": 2.3,
+   "theirs": 0.0,
+   "stdev": 3.0,
+   "metro": false
+  },
+  "no-misread::release-notes": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 1.65,
+   "stdev": 6.3,
+   "metro": false
+  },
+  "no-misread::essay": {
+   "kind": "prose",
+   "ours": 3.97,
+   "theirs": 0.0,
+   "stdev": 5.1,
+   "metro": false
+  },
+  "no-misread::tool-description": {
+   "kind": "technical",
+   "ours": 1.08,
+   "theirs": 4.3,
+   "stdev": 6.5,
+   "metro": false
+  },
+  "no-misread::error-message": {
+   "kind": "technical",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": null,
+   "metro": false
+  },
+  "stop-slop::readme-intro": {
+   "kind": "prose",
+   "ours": 3.97,
+   "theirs": 1.59,
+   "stdev": 9.2,
+   "metro": false
+  },
+  "stop-slop::incident": {
+   "kind": "prose",
+   "ours": 1.04,
+   "theirs": 2.08,
+   "stdev": 7.9,
+   "metro": false
+  },
+  "stop-slop::release-notes": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.87,
+   "stdev": 4.8,
+   "metro": false
+  },
+  "stop-slop::essay": {
+   "kind": "prose",
+   "ours": 2.63,
+   "theirs": 1.32,
+   "stdev": 5.2,
+   "metro": false
+  },
+  "stop-slop::tool-description": {
+   "kind": "technical",
+   "ours": 1.45,
+   "theirs": 4.35,
+   "stdev": 3.9,
+   "metro": false
+  },
+  "stop-slop::error-message": {
+   "kind": "technical",
+   "ours": 10.53,
+   "theirs": 5.26,
+   "stdev": null,
+   "metro": false
+  },
+  "simple-english::readme-intro": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 6.8,
+   "metro": false
+  },
+  "simple-english::incident": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 2.7,
+   "metro": true
+  },
+  "simple-english::release-notes": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 4.6,
+   "metro": false
+  },
+  "simple-english::essay": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 3.1,
+   "metro": false
+  },
+  "simple-english::tool-description": {
+   "kind": "technical",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 3.3,
+   "metro": false
+  },
+  "simple-english::error-message": {
+   "kind": "technical",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": null,
+   "metro": false
+  },
+  "asd-ste100::readme-intro": {
+   "kind": "prose",
+   "ours": 3.6,
+   "theirs": 0.0,
+   "stdev": 3.7,
+   "metro": false
+  },
+  "asd-ste100::incident": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 3.5,
+   "metro": false
+  },
+  "asd-ste100::release-notes": {
+   "kind": "prose",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": 3.2,
+   "metro": false
+  },
+  "asd-ste100::essay": {
+   "kind": "prose",
+   "ours": 3.18,
+   "theirs": 2.55,
+   "stdev": 3.4,
+   "metro": false
+  },
+  "asd-ste100::tool-description": {
+   "kind": "technical",
+   "ours": 0.0,
+   "theirs": 3.33,
+   "stdev": null,
+   "metro": false
+  },
+  "asd-ste100::error-message": {
+   "kind": "technical",
+   "ours": 0.0,
+   "theirs": 0.0,
+   "stdev": null,
+   "metro": false
+  }
+ },
+ "summary": {
+  "prose::baseline": [
+   2.35,
+   3.15,
+   7.6,
+   0
+  ],
+  "prose::no-misread": [
+   1.57,
+   0.84,
+   5.8,
+   0
+  ],
+  "prose::stop-slop": [
+   1.91,
+   1.47,
+   6.8,
+   0
+  ],
+  "prose::simple-english": [
+   0.0,
+   0.0,
+   4.3,
+   1
+  ],
+  "prose::asd-ste100": [
+   1.7,
+   0.64,
+   3.5,
+   0
+  ],
+  "technical::baseline": [
+   6.13,
+   5.93,
+   12.5,
+   0
+  ],
+  "technical::no-misread": [
+   0.54,
+   2.15,
+   6.5,
+   0
+  ],
+  "technical::stop-slop": [
+   5.99,
+   4.8,
+   3.9,
+   0
+  ],
+  "technical::simple-english": [
+   0.0,
+   0.0,
+   3.3,
+   0
+  ],
+  "technical::asd-ste100": [
+   0.0,
+   1.67,
+   null,
+   0
+  ],
+  "ALL::baseline": [
+   3.61,
+   4.08,
+   8.6,
+   0
+  ],
+  "ALL::no-misread": [
+   1.22,
+   1.28,
+   5.9,
+   0
+  ],
+  "ALL::stop-slop": [
+   3.27,
+   2.58,
+   6.2,
+   0
+  ],
+  "ALL::simple-english": [
+   0.0,
+   0.0,
+   4.1,
+   1
+  ],
+  "ALL::asd-ste100": [
+   1.13,
+   0.98,
+   3.5,
+   0
+  ]
+ },
+ "failures": []
+}

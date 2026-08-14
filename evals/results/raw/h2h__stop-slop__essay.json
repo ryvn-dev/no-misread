@@ -1,0 +1,4 @@
+{
+ "text": "Small teams ship faster because fewer people need to sign off before code moves. A five-person team can decide on Monday and deploy by Wednesday. A fifty-person team routes that same decision through three managers and two review meetings first.\n\nFive people track ten possible conversations with each other. Fifty people track over a thousand, and each new hire adds another meeting to the week.\n\nAt a fifty-person company, one team owns the backend and another owns the frontend, so two teams have to align their calendars before anyone can ship one feature. At a five-person startup, one engineer opens the backend and the frontend in one sitting and ships before lunch.\n\nA five-person team burns through its runway if it stalls for a month. A fifty-person company treats a stalled month as routine overhead. The startup that ships in March learns what works before the enterprise schedules its next planning meeting.",
+ "error": null
+}

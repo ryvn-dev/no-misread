@@ -1,0 +1,4 @@
+{
+ "text": "Small teams ship faster than large teams for three reasons.\n\nFirst, small teams need fewer approvals. One person can approve a change. The team continues. In a large team, several people often must approve a change. Each approval adds delay.\n\nSecond, small teams communicate directly. Members talk to each other without formal meetings. Large teams use status reports and sync meetings to share information. These steps use time needed for real work.\n\nThird, small teams have less coordination work. A change in one part of the system rarely affects other groups. In a large team, many groups share ownership. Several teams may then need to review a single change.\n\nSmall teams are not always the right choice. They may lack the resources for very large projects. A large team may still ship a big product faster, if the added review catches costly errors. But for speed, a small team removes layers that a large team must keep.",
+ "error": null
+}

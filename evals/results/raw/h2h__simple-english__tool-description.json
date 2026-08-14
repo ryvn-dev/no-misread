@@ -1,0 +1,4 @@
+{
+ "text": "This tool searches orders by any combination of customer email, date range, and status. Each of these fields is optional. It returns the orders that match, up to a maximum of 50 orders. The agent can use this tool to find specific orders, not to retrieve a full order history. If the date range is longer than one year, the tool returns an error. Split a range longer than one year into two or more requests.",
+ "error": null
+}

@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe copies Postgres tables into S3 as Parquet. One binary, no dependencies, no orchestration framework.\n\nPoint it at a connection string and a table, and it streams rows straight to Parquet objects in your bucket. It handles type mapping, chunking, and schema inference so you don't hand-write Avro schemas or babysit a Spark job for a table sync.\n\nRun it once for a backfill or drop it in a cron job for incremental loads. It reads a watermark column to pull only new or changed rows on each run, and writes partitioned output by date so downstream tools like Athena or Snowflake can query it without a full rescan.\n\nNo JVM, no Airflow DAG, no dbt project. Install the binary, set your connection details, and sync.",
+ "error": null
+}

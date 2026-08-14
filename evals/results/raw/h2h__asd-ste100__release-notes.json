@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe v2.0 is available now. This release has one breaking change and two improvements.\n\nBreaking change: The /v2/users response no longer has a single name field. It now has two fields, first_name and last_name. This change breaks any client that reads the old name field. Update your client code to read first_name and last_name before you install this release. Check every script and integration that calls /v2/users.\n\nWhat is new:\n- A new --incremental flag syncs only the rows that changed since the last run. This flag can reduce sync time for large tables.\n- Parquet writes are now 40% faster than in v1.\n\nTest this release in a staging environment before you upgrade production systems.",
+ "error": null
+}

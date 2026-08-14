@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe copies tables from Postgres to S3 in Parquet format. Point it at a database and a bucket, and it reads each table, converts the rows to Parquet, and writes the output to S3.\n\nsqlpipe runs as a single command with no server component. You configure the source database, the target bucket, and the list of tables in a configuration file, then run sqlpipe against it. Each sync reads the current table data and writes new Parquet files to S3.\n\nsqlpipe supports full syncs and incremental syncs. A full sync reads the whole table. An incremental sync reads only rows that changed since the last run, based on a column that you specify, for example `updated_at`.",
+ "error": null
+}

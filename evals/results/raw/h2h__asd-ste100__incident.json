@@ -1,0 +1,4 @@
+{
+ "text": "Between 14:02 and 14:31 UTC, 12% of API requests failed with HTTP 502 (Bad Gateway) errors. A 502 error means a server received an invalid response from another server. The other 88% of requests succeeded normally. The failures lasted 29 minutes. A deploy removed the cache warmup step. The cache warmup step loads data into the cache before the service starts. Without this step, some requests failed. At 14:27 UTC, we reverted the deploy. The revert restored the cache warmup step. The error rate returned to normal after the revert. This incident is now resolved.",
+ "error": null
+}

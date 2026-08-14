@@ -1,0 +1,4 @@
+{
+ "text": "The upload to S3 failed.\nAmazon S3 returned an AccessDenied error.\nThe IAM credentials do not have permission for the s3:PutObject action.\nAdd the s3:PutObject permission to the IAM policy.",
+ "error": null
+}

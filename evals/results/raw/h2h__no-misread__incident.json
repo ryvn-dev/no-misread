@@ -1,0 +1,4 @@
+{
+ "text": "Between 14:02 and 14:31 UTC, 12% of API requests failed with HTTP 502 errors. A deploy removed the cache warmup step. Without warmup, requests hit a cold cache and failed with 502 errors. The team reverted the deploy at 14:27. Error rates returned to normal by 14:31, and the incident is resolved. Total duration: 29 minutes. Affected traffic: 12% of API requests during the window. The API is fully operational, and no further action is needed. The team is reviewing the deploy process to prevent a repeat.",
+ "error": null
+}

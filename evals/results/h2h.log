@@ -1,0 +1,52 @@
+  baseline        readme-intro       ours=1.37   theirs=4.11   stdev=7.8
+  baseline        incident           ours=2.86   theirs=3.81   stdev=7.1
+  baseline        release-notes      ours=1.77   theirs=2.65   stdev=8.3
+  baseline        essay              ours=3.4    theirs=2.04   stdev=7.3
+  baseline        tool-description   ours=3.61   theirs=6.02   stdev=-
+  baseline        error-message      ours=8.66   theirs=5.84   stdev=12.5
+  no-misread      readme-intro       ours=0.0    theirs=1.71   stdev=8.8
+  no-misread      incident           ours=2.3    theirs=0.0    stdev=3.0
+  no-misread      release-notes      ours=0.0    theirs=1.65   stdev=6.3
+  no-misread      essay              ours=3.97   theirs=0.0    stdev=5.1
+  no-misread      tool-description   ours=1.08   theirs=4.3    stdev=6.5
+  no-misread      error-message      ours=0.0    theirs=0.0    stdev=-
+  stop-slop       readme-intro       ours=3.97   theirs=1.59   stdev=9.2
+  stop-slop       incident           ours=1.04   theirs=2.08   stdev=7.9
+  stop-slop       release-notes      ours=0.0    theirs=0.87   stdev=4.8
+  stop-slop       essay              ours=2.63   theirs=1.32   stdev=5.2
+  stop-slop       tool-description   ours=1.45   theirs=4.35   stdev=3.9
+  stop-slop       error-message      ours=10.53  theirs=5.26   stdev=-
+  simple-english  readme-intro       ours=0.0    theirs=0.0    stdev=6.8
+  simple-english  incident           ours=0.0    theirs=0.0    stdev=2.7
+  simple-english  release-notes      ours=0.0    theirs=0.0    stdev=4.6
+  simple-english  essay              ours=0.0    theirs=0.0    stdev=3.1
+  simple-english  tool-description   ours=0.0    theirs=0.0    stdev=3.3
+  simple-english  error-message      ours=0.0    theirs=0.0    stdev=-
+  asd-ste100      readme-intro       ours=3.6    theirs=0.0    stdev=3.7
+  asd-ste100      incident           ours=0.0    theirs=0.0    stdev=3.5
+  asd-ste100      release-notes      ours=0.0    theirs=0.0    stdev=3.2
+  asd-ste100      essay              ours=3.18   theirs=2.55   stdev=3.4
+  asd-ste100      tool-description   ours=0.0    theirs=3.33   stdev=-
+  asd-ste100      error-message      ours=0.0    theirs=0.0    stdev=-
+
+============================================================================
+condition         ours/100w  theirs/100w   (mean over cells, lower wins)
+----------------------------------------------------------------------------
+--- prose
+baseline               2.35         3.15   stdev=7.6  metronomic=0
+no-misread             1.57         0.84   stdev=5.8  metronomic=0
+stop-slop              1.91         1.47   stdev=6.8  metronomic=0
+simple-english         0.00         0.00   stdev=4.3  metronomic=1
+asd-ste100             1.70         0.64   stdev=3.5  metronomic=0
+--- technical
+baseline               6.13         5.93   stdev=12.5  metronomic=0
+no-misread             0.54         2.15   stdev=6.5  metronomic=0
+stop-slop              5.99         4.80   stdev=3.9  metronomic=0
+simple-english         0.00         0.00   stdev=3.3  metronomic=0
+asd-ste100             0.00         1.67   stdev=None  metronomic=0
+--- ALL
+baseline               3.61         4.08   stdev=8.6  metronomic=0
+no-misread             1.22         1.28   stdev=5.9  metronomic=0
+stop-slop              3.27         2.58   stdev=6.2  metronomic=0
+simple-english         0.00         0.00   stdev=4.1  metronomic=1
+asd-ste100             1.13         0.98   stdev=3.5  metronomic=0

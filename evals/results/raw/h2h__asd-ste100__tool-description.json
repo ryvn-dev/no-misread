@@ -1,0 +1,4 @@
+{
+ "text": "Searches customer orders by email, date range, and status. Requires at least one filter and a date range of one year or less; a longer range returns an error. Returns up to 50 matching orders, sorted by date. Use this tool to find existing orders for a specific customer or time period, not to retrieve a single order by ID.",
+ "error": null
+}

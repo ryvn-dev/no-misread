@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe 2.0\n\nBreaking change: /v2/users no longer returns a name field. The endpoint returns first_name and last_name instead: a request that returned {\"name\": \"Ada Lovelace\"} now returns {\"first_name\": \"Ada\", \"last_name\": \"Lovelace\"}. If your client reads the name field, that lookup breaks on upgrade. Update the client first, or pin it to v1 until you're ready to migrate.\n\nNew: the --incremental flag. Pass --incremental and sqlpipe pulls only rows that changed since the last sync, instead of scanning the full table.\n\nPerformance: Parquet writes run 40% faster in this release. We rewrote the encoding path to batch column writes instead of flushing row by row.\n\nCheck your integration against the new /v2/users response before you deploy.",
+ "error": null
+}

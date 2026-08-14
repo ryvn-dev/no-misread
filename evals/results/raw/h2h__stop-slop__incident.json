@@ -1,0 +1,4 @@
+{
+ "text": "API requests began failing at 14:02 UTC after a deploy removed the cache warmup step. Cold caches drove 12% of requests to HTTP 502 errors. Engineers identified the cause and reverted the deploy at 14:27 UTC, restoring cache state and returning error rates to baseline by 14:31 UTC. Total impact: 29 minutes, peaking at 12% of API traffic. No data loss occurred. We're adding a pre-deploy check that blocks releases lacking a cache warmup step, and a synthetic monitor that pages on-call within two minutes of elevated 502 rates. We apologize for the disruption this caused.",
+ "error": null
+}

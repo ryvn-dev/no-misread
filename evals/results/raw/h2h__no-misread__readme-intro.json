@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe copies Postgres tables into S3 as Parquet. It connects to your database, reads a table or a query result, and writes column-oriented files that Athena and DuckDB can query directly. No intermediate CSV stage, no manual schema mapping.\n\nSync runs in batches you configure by row count or by a time window, and each batch lands as its own file, so a failed run does not corrupt data already written. Compression defaults to Snappy. Type conversion follows Postgres's native types into their Parquet equivalents.\n\nPoint it at a connection string and a target bucket, then run it. Full syncs and incremental syncs both work from the same command; a --since flag picks which one you get.",
+ "error": null
+}

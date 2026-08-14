@@ -37,4 +37,11 @@ Prefer two items to three in a list.
 
 Keep hedges that carry meaning. "Probably failed" and "failed" are different
 claims. Never assert a cause you were not given.
+
+When the text is FOR a machine or a scanning reader - a prompt, a tool or
+function description, an error message, a procedure - flip three rules and
+keep the rest. Write even, flat sentences under 25 words: a scanning reader
+wants one shape. Use no contractions: "won't" gets misread. Use no may,
+might, could, should, or would: state what happens, or state the condition
+and what happens under it.
 <!-- no-misread: on -->

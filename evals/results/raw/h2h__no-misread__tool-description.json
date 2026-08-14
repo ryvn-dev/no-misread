@@ -1,0 +1,4 @@
+{
+ "text": "Searches orders by customer email, date range, and status. Returns at most 50 matches, most recent first. The date range cannot exceed one year; a longer range returns an error instead of results. Use this tool when the user asks about a specific customer's orders, orders within a time window, or orders in a given status (for example, pending, shipped, refunded). If the request spans more than one year, split it into multiple calls with narrower ranges. Do not use this tool for order counts or aggregates; it returns individual order records only.",
+ "error": null
+}

@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe copies tables from a Postgres database to Parquet files in S3. Run it from the command line to move one table, several tables, or a full schema.\n\nPoint sqlpipe at a source database and a destination S3 bucket. sqlpipe reads each table and writes it as a Parquet file. You do not need to write custom export code for each table.\n\nsqlpipe supports incremental sync. Give it a column that marks change (for example, a timestamp or an ID). sqlpipe copies only the rows that changed since the last run.\n\nsqlpipe is a single binary. It has no runtime dependencies. Install it, set your connection details, and run one command.",
+ "error": null
+}

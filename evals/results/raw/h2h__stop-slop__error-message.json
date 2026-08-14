@@ -1,0 +1,4 @@
+{
+ "text": "I don't have access to sqlpipe's source to confirm this matches the literal string in the codebase — here's a message built to the spec you gave (S3 upload, AccessDenied, missing `s3:PutObject`), written to the style rules:\n\n```\nS3 upload failed: PutObject denied for s3://<bucket>/<key>\nAWS returned AccessDenied. The IAM credentials sqlpipe used lack s3:PutObject on this bucket.\nAdd s3:PutObject to the role or user policy, then rerun the pipe.\n```",
+ "error": null
+}

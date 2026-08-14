@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe v2.0 has three changes: a breaking change to the users endpoint, a new flag for incremental sync, and a faster Parquet writer.\n\nBREAKING CHANGE: Update your client to read `first_name` and `last_name` from `/v2/users`. This release removes the single `name` field. Clients that still read `name` will fail after you upgrade. The change applies to both `GET` and `POST` responses.\n\nNew: The `--incremental` flag syncs only new and changed rows since the last run. Use this flag to reduce sync time on large tables.\n\nImprovement: Parquet writes are now 40% faster than in v1. The write path uses a new buffer strategy, so you do not need to change the configuration.",
+ "error": null
+}

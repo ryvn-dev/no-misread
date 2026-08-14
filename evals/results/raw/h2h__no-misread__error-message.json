@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe failed to upload to S3: AccessDenied.\nThe IAM credentials in use lack the s3:PutObject permission for this bucket.\nAdd s3:PutObject to the attached IAM policy, then retry the upload.",
+ "error": null
+}

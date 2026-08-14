@@ -1,0 +1,4 @@
+{
+ "text": "sqlpipe v2.0 is out, and it changes how /v2/users returns names.\n\nThe `name` field is gone. The endpoint now returns `first_name` and `last_name` instead. This breaks any client that still reads `name` directly, so update your parsers before you upgrade. We split the field because sorting and search needed the two halves separately; a single string couldn't carry that.\n\nTwo other changes round out this release. The `--incremental` flag lets sync jobs skip rows that already exist, instead of reprocessing a full table each run. And Parquet writes now finish about 40% faster, thanks to a rewritten encoder that batches column chunks before it flushes them to disk.\n\nCheck your `/v2/users` integrations first. The rest is additive, no other breaking changes.",
+ "error": null
+}
