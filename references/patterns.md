@@ -148,7 +148,7 @@ Text that announces its own architecture.
 ## Emoji as section markers
 
 🚀 ✨ 🎯 at the head of sections, or leading every bullet. Almost nobody does
-this by hand in prose; it arrives from templates and from generated markdown.
+this by hand in prose. It arrives from templates and from generated markdown.
 
 **Fix:** remove. Keep emoji where a person would use one, which is roughly
 never in a document and sometimes in a message.

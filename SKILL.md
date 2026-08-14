@@ -132,7 +132,7 @@ Marks is pass or fail, not a score. One invisible character fails the text
 regardless of the other five.
 
 Under 40 of 50, rewrite rather than edit. Edited machine prose stays machine
-prose with better vocabulary; the shapes survive word-level fixes, and the
+prose with better vocabulary. The shapes survive word-level fixes, and the
 shapes are what the reader hears.
 
 ## What this does not do

@@ -42,7 +42,7 @@ the text into sentences, take the spread of their lengths. Published
 comparisons put roughly 85% of GPT-4o's sentences inside a 15-28 word band,
 against human writing that runs from four words to past fifty with no centre at
 all. Texts scoring low on both burstiness and perplexity get flagged by
-detectors over 90% of the time; raise burstiness alone and that falls to around
+detectors over 90% of the time. Raise burstiness alone and that falls to around
 40%.
 
 So `--check` reports two numbers, and the second matters more. `stdev_words` is
