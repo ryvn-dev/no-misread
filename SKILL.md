@@ -11,20 +11,40 @@ Generated English gives itself away twice: in characters a keyboard cannot
 type, and in sentences built the same way every time. Erase the first. Rewrite
 the second.
 
-## Run the linter before you read
+## The loop
+
+Check twice. The first check tells you what to fix. The second one decides
+whether you may ship, and it is the one people skip.
 
 ```bash
-python3 lint/soundhuman.py --strip draft.md > clean.md   # erase the marks
-python3 lint/soundhuman.py --check clean.md              # score what is left
+# 1. diagnose the text you were given
+python3 lint/soundhuman.py --strip draft.md > work.md
+python3 lint/soundhuman.py --check work.md
+
+# 2. rewrite work.md yourself, applying the rules below
+
+# 3. gate the text you are about to hand over
+python3 lint/soundhuman.py --strip work.md > final.md
+python3 lint/soundhuman.py --check final.md      # exit 0 or go back to step 2
 ```
+
+**Why the second pass is not optional.** Your rewrite is model output. It can
+carry every mark the input had, including the ones these rules told you to
+remove: an em dash slips back in, `leverage` returns because it fit, and a page
+of evenly rewritten sentences comes out more metronomic than the draft you
+started from. Step 1 measures a text you did not write. Step 3 measures the one
+you did. Only step 3 has any bearing on what the reader gets.
+
+Stop after three passes. If it still fails, hand it over with a note naming
+what remains and why you could not fix it, rather than looping.
 
 The linter owns everything mechanical: invisible characters, typography, worn
 words, sentence-length spread. Do not re-litigate its findings by eye, and do
-not claim a text is clean without running it. Your judgment is for what it
+not call a text clean without running step 3. Your judgment is for what it
 cannot see, which is most of what matters.
 
-If the linter is not available, apply the rules below by hand and say that you
-did, so nobody mistakes an unchecked read for a measured one.
+Without the linter, apply the rules by hand and say that you did, so nobody
+mistakes an unchecked read for a measured one.
 
 ## The rules
 
@@ -85,6 +105,7 @@ changes what the text asserts. Tighten around hedges, never through them.
 
 Before delivering prose, in this order:
 
+- Ran step 3 of the loop on **your own rewrite**, not only on the input?
 - Ran `--strip`? If not, the text may carry marks that reading cannot find.
 - Any em dash, curly quote, or ellipsis character?
 - Three sentences in a row within four words of each other in length?
